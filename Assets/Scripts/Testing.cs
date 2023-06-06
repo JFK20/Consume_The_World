@@ -6,8 +6,6 @@ using CodeMonkey.Utils;
 
 
 public class Testing : MonoBehaviour {
-    [SerializeField] private HeatMapVisual heatMapVisual;
-    [SerializeField] private HeatMapBoolVisual heatMapBoolVisual;
     //[SerializeField] private HeatMapGenericVisual heatMapGenericVisual;
     private GridScript<HeatMapGridObject> grid;
     private GridScript<bool> boolGrid;

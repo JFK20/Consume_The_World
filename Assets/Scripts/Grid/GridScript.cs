@@ -12,7 +12,7 @@ public class GridScript<TGridObject> {
         public int y;
     }
 
-    private bool showDebug = true;
+    private bool showDebug = false;
     private int height;
     private int width;
     private float cellSize;
@@ -62,7 +62,7 @@ public class GridScript<TGridObject> {
         //SetValue(2,1,5);
     }
 
-    private Vector3 GetWorldPosition(int x, int y) {
+    public Vector3 GetWorldPosition(int x, int y) {
         return new Vector3(x, y) * cellSize + originPosition;
     }
 
@@ -102,6 +102,18 @@ public class GridScript<TGridObject> {
         int x, y;
         GetXY(worldPosition, out x, out y);
         return GetGridObject(x,y);
+    }
+    
+    public int GetWidth() {
+        return width;
+    }
+
+    public int GetHeight() {
+        return height;
+    }
+
+    public float GetCellSize() {
+        return cellSize;
     }
 }
 

@@ -6,9 +6,9 @@ using CodeMonkey.Utils;
 
 public class GridBuildingSystem : MonoBehaviour {
 
-    [SerializeField] private PlacedObjectTypeSO placedObjectTypeSo1;
-    [SerializeField] private PlacedObjectTypeSO placedObjectTypeSo2;
+    [SerializeField] private PlacedObjectTypeSO[] placedObjectTypeSoArray;
     private GridXZ<GridObject> grid;
+    private PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
 
     private void Awake() {
         int gridwidth = 10;
@@ -59,46 +59,48 @@ public class GridBuildingSystem : MonoBehaviour {
 
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
-            Vector3 pos = Mouse3D.GetMouseWorldPosition();
-            grid.GetXZ(pos, out int x, out int z);
-            Vector3 posOfObj = grid.GetWorldPosition(x, z);
-
-            GridObject gridObject = grid.GetGridObject(x, z);
-            if (gridObject.CanBuild()) {
-                Transform builtTransform = Instantiate(placedObjectTypeSo1.prefab, posOfObj, Quaternion.identity);
-                gridObject.SetTransform(builtTransform);
-            }
-            else {
-                Debug.Log("Already Occupied");
-            }
+            Build(0);
         }
         if (Input.GetMouseButtonDown(1)) {
-            Vector3 pos = Mouse3D.GetMouseWorldPosition();
-            grid.GetXZ(pos, out int x, out int z);
+            Build(1);
+        }
 
-            List<Vector2Int> gridPositionList = placedObjectTypeSo2.GetGridPositionList(new Vector2Int(x ,z), PlacedObjectTypeSO.Dir.Down);
+        if (Input.GetKeyDown(KeyCode.R)) {
+            dir = PlacedObjectTypeSO.GetNextDir(dir);
+            Debug.Log(dir);
+        }
+    }
 
-            bool freeSlot = true;
-            foreach (Vector2Int gridposition in gridPositionList) {
-                if (!grid.GetGridObject(gridposition.x,gridposition.y).CanBuild()) {
-                    //cannot build
-                    freeSlot = false;
-                    break;
-                }
+    private void Build(int number) {
+        Vector3 pos = Mouse3D.GetMouseWorldPosition();
+        grid.GetXZ(pos, out int x, out int z);
+
+        List<Vector2Int> gridPositionList = placedObjectTypeSoArray[number].GetGridPositionList(new Vector2Int(x ,z), dir);
+
+        bool freeSlot = true;
+        foreach (Vector2Int gridposition in gridPositionList) {
+            if (!grid.GetGridObject(gridposition.x,gridposition.y).CanBuild()) {
+                //cannot build
+                freeSlot = false;
+                break;
             }
+        }
+
+        GridObject gridObject = grid.GetGridObject(x, z);
+        if (freeSlot) {
+            Vector2Int rotationOffset = placedObjectTypeSoArray[number].GetRotationOffset(dir);
+            Vector3 placedObjectWorldPosition =
+                grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
             
-            Vector3 posOfObj = grid.GetWorldPosition(x, z);
-
-            GridObject gridObject = grid.GetGridObject(x, z);
-            if (freeSlot) {
-                Transform builtTransform = Instantiate(placedObjectTypeSo2.prefab, posOfObj, Quaternion.identity);
-                foreach (Vector2Int gridposition in gridPositionList) {
-                    grid.GetGridObject(gridposition.x, gridposition.y).SetTransform(builtTransform);
-                }
+            Transform builtTransform = Instantiate(placedObjectTypeSoArray[number].prefab,
+                placedObjectWorldPosition,
+                Quaternion.Euler(0, placedObjectTypeSoArray[number].GetRotationAngle(dir), 0));
+            foreach (Vector2Int gridposition in gridPositionList) {
+                grid.GetGridObject(gridposition.x, gridposition.y).SetTransform(builtTransform);
             }
-            else {
-                Debug.Log("Already Occupied");
-            }
+        }
+        else {
+            Debug.Log("Already Occupied");
         }
     }
 }

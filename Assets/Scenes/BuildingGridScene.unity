@@ -506,5 +506,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f94617a13db627488bd05e925fb9e19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placedObjectTypeSo1: {fileID: 11400000, guid: 9d9bf7252da28e54b9721dab8cd36a0d, type: 2}
-  placedObjectTypeSo2: {fileID: 11400000, guid: 7374617d4dd3f81439ca772c5398c0e1, type: 2}
+  placedObjectTypeSoList:
+  - {fileID: 11400000, guid: 9d9bf7252da28e54b9721dab8cd36a0d, type: 2}
+  - {fileID: 11400000, guid: 7374617d4dd3f81439ca772c5398c0e1, type: 2}

@@ -6,7 +6,9 @@ using CodeMonkey.Utils;
 
 public class GridBuildingSystem : MonoBehaviour {
 
-    [SerializeField] private PlacedObjectTypeSO[] placedObjectTypeSoArray;
+    [SerializeField] private List<PlacedObjectTypeSO> placedObjectTypeSoList;
+    private PlacedObjectTypeSO placedObjectTypeSo;
+    
     private GridXZ<GridObject> grid;
     private PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
 
@@ -18,6 +20,7 @@ public class GridBuildingSystem : MonoBehaviour {
         grid = new GridXZ<GridObject>(gridwidth, gridheight, cellSize, Vector3.zero,
             (GridXZ<GridObject> g, int x, int z) => new GridObject(g, x, z));
 
+        placedObjectTypeSo = placedObjectTypeSoList[0];
     }
     
     public class GridObject {
@@ -26,7 +29,7 @@ public class GridBuildingSystem : MonoBehaviour {
         private int x;
         private int z;
 
-        private Transform transform;
+        private PlacedObject placedObject;
 
         public GridObject(GridXZ<GridObject> grid, int x, int z) {
             this.grid = grid;
@@ -34,48 +37,52 @@ public class GridBuildingSystem : MonoBehaviour {
             this.z = z;
         }
         
-        public Transform GetTransform() {
-            return this.transform;
+        public PlacedObject GetPlacedObject() {
+            return this.placedObject;
         }
 
-        public void SetTransform(Transform Tstransform) {
-            this.transform = Tstransform;
+        public void SetPlacedObject(PlacedObject Tstransform) {
+            this.placedObject = Tstransform;
             grid.TriggerGridObjectChanged(x, z);
         }
 
-        public void ClearTransform() {
-            this.transform = null;
+        public void ClearPlacedObject() {
+            this.placedObject = null;
             grid.TriggerGridObjectChanged(x, z);
         }
 
         public bool CanBuild() {
-            return this.transform == null;
+            return this.placedObject == null;
         }
 
         public override string ToString() {
-            return x + "," + z + "\n" + transform;
+            return x + "," + z + "\n" + placedObject;
         }
     }
 
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
-            Build(0);
+            Build();
+        }if (Input.GetMouseButtonDown(1)) {
+            Demolish();
         }
-        if (Input.GetMouseButtonDown(1)) {
-            Build(1);
+        
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            placedObjectTypeSo = placedObjectTypeSoList[0];
         }
-
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            placedObjectTypeSo = placedObjectTypeSoList[1];
+        }
         if (Input.GetKeyDown(KeyCode.R)) {
             dir = PlacedObjectTypeSO.GetNextDir(dir);
-            Debug.Log(dir);
         }
     }
 
-    private void Build(int number) {
+    private void Build() {
         Vector3 pos = Mouse3D.GetMouseWorldPosition();
         grid.GetXZ(pos, out int x, out int z);
 
-        List<Vector2Int> gridPositionList = placedObjectTypeSoArray[number].GetGridPositionList(new Vector2Int(x ,z), dir);
+        List<Vector2Int> gridPositionList = placedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
 
         bool freeSlot = true;
         foreach (Vector2Int gridposition in gridPositionList) {
@@ -88,19 +95,33 @@ public class GridBuildingSystem : MonoBehaviour {
 
         GridObject gridObject = grid.GetGridObject(x, z);
         if (freeSlot) {
-            Vector2Int rotationOffset = placedObjectTypeSoArray[number].GetRotationOffset(dir);
+            Vector2Int rotationOffset = placedObjectTypeSo.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+
+            PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo);
             
-            Transform builtTransform = Instantiate(placedObjectTypeSoArray[number].prefab,
-                placedObjectWorldPosition,
-                Quaternion.Euler(0, placedObjectTypeSoArray[number].GetRotationAngle(dir), 0));
             foreach (Vector2Int gridposition in gridPositionList) {
-                grid.GetGridObject(gridposition.x, gridposition.y).SetTransform(builtTransform);
+                grid.GetGridObject(gridposition.x, gridposition.y).SetPlacedObject(placedObject);
             }
         }
         else {
             Debug.Log("Already Occupied");
         }
+    }
+
+    private void Demolish() {
+        GridObject gridObject = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
+        PlacedObject placedObject = gridObject.GetPlacedObject();
+        if (placedObject == null) {
+            return;
+        }
+        placedObject.DestroySelf();
+        List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
+        
+        foreach (Vector2Int gridposition in gridPositionList) {
+            grid.GetGridObject(gridposition.x, gridposition.y).ClearPlacedObject();
+        }
+        
     }
 }

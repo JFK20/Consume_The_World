@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3520abf4b15590043a5419ac410a2ee0, type: 3}
-  m_Name: LinconSo
+  m_Name: WhiteHouse
   m_EditorClassIdentifier: 
-  nameString: Lincon
-  prefab: {fileID: 782702443877573796, guid: 86970742f28350b478ecfcbc7d4104d3, type: 3}
-  visual: {fileID: 782702443877573796, guid: 86970742f28350b478ecfcbc7d4104d3, type: 3}
-  width: 1
-  height: 1
+  nameString: WhiteHouse
+  prefab: {fileID: 7511223143933201943, guid: 88543424b1129104c93a94962fbfe3eb, type: 3}
+  visual: {fileID: 7511223143933201943, guid: b5c4a065707822c45a6728ec93fd2988, type: 3}
+  width: 2
+  height: 2

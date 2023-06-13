@@ -41,8 +41,8 @@ public class GridBuildingSystem : MonoBehaviour {
             return this.placedObject;
         }
 
-        public void SetPlacedObject(PlacedObject Tstransform) {
-            this.placedObject = Tstransform;
+        public void SetPlacedObject(PlacedObject placedObject) {
+            this.placedObject = placedObject;
             grid.TriggerGridObjectChanged(x, z);
         }
 

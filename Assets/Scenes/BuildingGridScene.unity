@@ -509,3 +509,48 @@ MonoBehaviour:
   placedObjectTypeSoList:
   - {fileID: 11400000, guid: 9d9bf7252da28e54b9721dab8cd36a0d, type: 2}
   - {fileID: 11400000, guid: 7374617d4dd3f81439ca772c5398c0e1, type: 2}
+--- !u!1 &2075294495
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2075294497}
+  - component: {fileID: 2075294496}
+  m_Layer: 0
+  m_Name: PreviewBuilding
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2075294496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075294495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa79ac320b71a3c418c9bb968d2c75aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GhostBlue: {fileID: 2100000, guid: 6e8ede5c882059547aa4b957a2bf4dfe, type: 2}
+--- !u!4 &2075294497
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2075294495}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.5747795, y: 5.3630023, z: 3.826789}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -5,6 +5,11 @@ using UnityEngine;
 using CodeMonkey.Utils;
 
 public class GridBuildingSystem : MonoBehaviour {
+    
+    public static GridBuildingSystem Instance { get; private set; }
+    
+    public event EventHandler OnSelectedChanged;
+    public event EventHandler OnObjectPlaced;
 
     [SerializeField] private List<PlacedObjectTypeSO> placedObjectTypeSoList;
     private PlacedObjectTypeSO placedObjectTypeSo;
@@ -13,6 +18,8 @@ public class GridBuildingSystem : MonoBehaviour {
     private PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
 
     private void Awake() {
+        Instance = this;
+        
         int gridwidth = 10;
         int gridheight = 10;
 
@@ -63,15 +70,21 @@ public class GridBuildingSystem : MonoBehaviour {
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
             Build();
-        }if (Input.GetMouseButtonDown(1)) {
+        }
+        if (Input.GetMouseButtonDown(1)) {
             Demolish();
         }
-        
+
+        if (Input.GetKeyDown(KeyCode.Alpha0)) {
+            DeselectObjectType();
+        }
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             placedObjectTypeSo = placedObjectTypeSoList[0];
+            RefreshSelectedObjectType();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
             placedObjectTypeSo = placedObjectTypeSoList[1];
+            RefreshSelectedObjectType();
         }
         if (Input.GetKeyDown(KeyCode.R)) {
             dir = PlacedObjectTypeSO.GetNextDir(dir);
@@ -79,6 +92,9 @@ public class GridBuildingSystem : MonoBehaviour {
     }
 
     private void Build() {
+        if (placedObjectTypeSo == null) {
+            return;
+        }
         Vector3 pos = Mouse3D.GetMouseWorldPosition();
         grid.GetXZ(pos, out int x, out int z);
 
@@ -86,14 +102,18 @@ public class GridBuildingSystem : MonoBehaviour {
 
         bool freeSlot = true;
         foreach (Vector2Int gridposition in gridPositionList) {
-            if (!grid.GetGridObject(gridposition.x,gridposition.y).CanBuild()) {
+            GridObject onPositionObject = grid.GetGridObject(gridposition.x,gridposition.y);
+            if (onPositionObject == null) {
+                return;
+            }
+            if (!onPositionObject.CanBuild()) {
                 //cannot build
                 freeSlot = false;
                 break;
             }
         }
 
-        GridObject gridObject = grid.GetGridObject(x, z);
+        //GridObject gridObject = grid.GetGridObject(x, z);
         if (freeSlot) {
             Vector2Int rotationOffset = placedObjectTypeSo.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition =
@@ -104,6 +124,7 @@ public class GridBuildingSystem : MonoBehaviour {
             foreach (Vector2Int gridposition in gridPositionList) {
                 grid.GetGridObject(gridposition.x, gridposition.y).SetPlacedObject(placedObject);
             }
+            OnObjectPlaced?.Invoke(this, EventArgs.Empty);
         }
         else {
             Debug.Log("Already Occupied");
@@ -112,6 +133,9 @@ public class GridBuildingSystem : MonoBehaviour {
 
     private void Demolish() {
         GridObject gridObject = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
+        if (gridObject == null) {
+            return;
+        }
         PlacedObject placedObject = gridObject.GetPlacedObject();
         if (placedObject == null) {
             return;
@@ -123,5 +147,38 @@ public class GridBuildingSystem : MonoBehaviour {
             grid.GetGridObject(gridposition.x, gridposition.y).ClearPlacedObject();
         }
         
+    }
+    
+    public Vector3 GetMouseWorldSnappedPosition() {
+        Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();
+        grid.GetXZ(mousePosition, out int x, out int z);
+
+        if (placedObjectTypeSo != null) {
+            Vector2Int rotationOffset = placedObjectTypeSo.GetRotationOffset(dir);
+            Vector3 placedObjectWorldPosition = grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+            return placedObjectWorldPosition;
+        } else {
+            return mousePosition;
+        }
+    }
+
+    public Quaternion GetPlacedObjectRotation() {
+        if (placedObjectTypeSo != null) {
+            return Quaternion.Euler(0, placedObjectTypeSo.GetRotationAngle(dir), 0);
+        } else {
+            return Quaternion.identity;
+        }
+    }
+
+    public PlacedObjectTypeSO GetPlacedObjectTypeSO() {
+        return placedObjectTypeSo;
+    }
+    
+    private void DeselectObjectType() {
+        placedObjectTypeSo = null; RefreshSelectedObjectType();
+    }
+
+    private void RefreshSelectedObjectType() {
+        OnSelectedChanged?.Invoke(this, EventArgs.Empty);
     }
 }

@@ -29,43 +29,6 @@ public class GridBuildingSystem : MonoBehaviour {
 
         placedObjectTypeSo = placedObjectTypeSoList[0];
     }
-    
-    public class GridObject {
-
-        private GridXZ<GridObject> grid;
-        private int x;
-        private int z;
-
-        private PlacedObject placedObject;
-
-        public GridObject(GridXZ<GridObject> grid, int x, int z) {
-            this.grid = grid;
-            this.x = x;
-            this.z = z;
-        }
-        
-        public PlacedObject GetPlacedObject() {
-            return this.placedObject;
-        }
-
-        public void SetPlacedObject(PlacedObject placedObject) {
-            this.placedObject = placedObject;
-            grid.TriggerGridObjectChanged(x, z);
-        }
-
-        public void ClearPlacedObject() {
-            this.placedObject = null;
-            grid.TriggerGridObjectChanged(x, z);
-        }
-
-        public bool CanBuild() {
-            return this.placedObject == null;
-        }
-
-        public override string ToString() {
-            return x + "," + z + "\n" + placedObject;
-        }
-    }
 
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
@@ -180,5 +143,50 @@ public class GridBuildingSystem : MonoBehaviour {
 
     private void RefreshSelectedObjectType() {
         OnSelectedChanged?.Invoke(this, EventArgs.Empty);
+    }
+    
+    public class GridObject : SaveableObject {
+
+        private GridXZ<GridObject> grid;
+        private int x;
+        private int z;
+
+        private PlacedObject placedObject;
+
+        public GridObject(GridXZ<GridObject> grid, int x, int z) {
+            this.grid = grid;
+            this.x = x;
+            this.z = z;
+        }
+        
+        public PlacedObject GetPlacedObject() {
+            return this.placedObject;
+        }
+
+        public void SetPlacedObject(PlacedObject placedObject) {
+            this.placedObject = placedObject;
+            grid.TriggerGridObjectChanged(x, z);
+        }
+
+        public void ClearPlacedObject() {
+            this.placedObject = null;
+            grid.TriggerGridObjectChanged(x, z);
+        }
+
+        public bool CanBuild() {
+            return this.placedObject == null;
+        }
+
+        public override string ToString() {
+            return x + "," + z + "\n" + placedObject;
+        }
+
+        public override void Load(string[] values) {
+            base.Load(values);
+        }
+
+        public override void Save(int id) {
+            base.Save(id);
+        }
     }
 }

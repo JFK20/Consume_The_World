@@ -11,20 +11,20 @@ enum ObjectType {
 public abstract class SaveableObject : MonoBehaviour {
     protected string save;
     
+    [SerializeField]
     private ObjectType objectType;
     
     // Start is called before the first frame update
     private void Start()
     {
-        Debug.Log("Added to List");
         SaveGameManager.Instance.SaveableObjectList.Add(this);
     }
 
     public virtual void Save(int id) {
-        PlayerPrefs.SetString(id.ToString(), transform.position.ToString());
+        PlayerPrefs.SetString(id.ToString(), objectType.ToString() + "_" + transform.position.ToString());
     }
 
-    public virtual void Load(string values) {
+    public virtual void Load(string[] values) {
         
     }
 

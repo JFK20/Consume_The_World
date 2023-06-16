@@ -16,6 +16,7 @@ public abstract class SaveableObject : MonoBehaviour {
     // Start is called before the first frame update
     private void Start()
     {
+        Debug.Log("Added to List");
         SaveGameManager.Instance.SaveableObjectList.Add(this);
     }
 
@@ -29,9 +30,5 @@ public abstract class SaveableObject : MonoBehaviour {
 
     public  void DestroySaveable() {
         
-    }
-
-    public void OnDestroy() {
-        SaveGameManager.Instance.SaveableObjectList.Remove(this);
     }
 }

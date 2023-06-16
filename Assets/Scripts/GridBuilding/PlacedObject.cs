@@ -29,10 +29,12 @@ public class PlacedObject : SaveableObject  {
 
     public void DestroySelf() {
         Destroy(gameObject);
+        SaveGameManager.Instance.SaveableObjectList.Remove(this);
+        Debug.Log("Removed from List");
     }
     
     public override void Load(string values) {
-        base.Load(values);
+        // Load Values For Inventory
     }
 
     public override void Save(int id) {

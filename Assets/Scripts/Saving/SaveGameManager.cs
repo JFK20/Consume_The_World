@@ -35,16 +35,29 @@ public class SaveGameManager : MonoBehaviour {
     }
 
     public void Load() {
+        foreach (SaveableObject obj in SaveableObjectList) {
+            if (obj != null) {
+               PlacedObject placedObject = obj.gameObject.GetComponent<PlacedObject>();
+               List<Vector2Int> posList = placedObject.GetGridPositionList();
+               foreach (Vector2Int pos in posList) {
+                   GridBuildingSystem.Instance.grid.GetGridObject(pos.x, pos.y).ClearPlacedObject();
+               } 
+               Destroy(obj.gameObject);
+            }
+        }
+        
+        SaveableObjectList.Clear();
+        
         int objectCount = PlayerPrefs.GetInt("ObjectCount");
 
         for (int i = 0; i < objectCount; i++) {
-            //work around
             string value = PlayerPrefs.GetString(i.ToString());
             Vector3Int pos = StringToIntVector(value);
             int cellSize = GridBuildingSystem.Instance.grid.GetCellSize();
             pos = new Vector3Int(pos.x / cellSize,pos.y / cellSize,pos.z / cellSize);
-            Debug.Log(pos);
             PlacedObject placedObject = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.z);
+            // Implement Later for Inventory
+            //placedObject.Load();
         }
     }
 

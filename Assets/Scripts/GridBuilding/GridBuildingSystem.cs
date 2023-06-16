@@ -54,9 +54,11 @@ public class GridBuildingSystem : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.S)) {
             SaveGameManager.Instance.Save();
+            Debug.Log("Saved");
         }
         if (Input.GetKeyDown(KeyCode.L)) {
             SaveGameManager.Instance.Load();
+            Debug.Log("Loaded");
         }
     }
 

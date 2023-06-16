@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlacedObject : MonoBehaviour {
+public class PlacedObject : SaveableObject  {
 
     public static PlacedObject Create(Vector3 WorldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir,
         PlacedObjectTypeSO placedObjectTypeSO) {
@@ -31,4 +31,11 @@ public class PlacedObject : MonoBehaviour {
         Destroy(gameObject);
     }
     
+    public override void Load(string values) {
+        base.Load(values);
+    }
+
+    public override void Save(int id) {
+        base.Save(id);
+    }
 }

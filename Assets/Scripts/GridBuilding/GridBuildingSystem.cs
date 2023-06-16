@@ -14,7 +14,7 @@ public class GridBuildingSystem : MonoBehaviour {
     [SerializeField] private List<PlacedObjectTypeSO> placedObjectTypeSoList;
     private PlacedObjectTypeSO placedObjectTypeSo;
     
-    private GridXZ<GridObject> grid;
+    public GridXZ<GridObject> grid { get; private set; }
     private PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
 
     private void Awake() {
@@ -23,7 +23,7 @@ public class GridBuildingSystem : MonoBehaviour {
         int gridwidth = 10;
         int gridheight = 10;
 
-        float cellSize = 10f;
+        int cellSize = 10;
         grid = new GridXZ<GridObject>(gridwidth, gridheight, cellSize, Vector3.zero,
             (GridXZ<GridObject> g, int x, int z) => new GridObject(g, x, z));
 
@@ -51,6 +51,12 @@ public class GridBuildingSystem : MonoBehaviour {
         }
         if (Input.GetKeyDown(KeyCode.R)) {
             dir = PlacedObjectTypeSO.GetNextDir(dir);
+        }
+        if (Input.GetKeyDown(KeyCode.S)) {
+            SaveGameManager.Instance.Save();
+        }
+        if (Input.GetKeyDown(KeyCode.L)) {
+            SaveGameManager.Instance.Load();
         }
     }
 
@@ -91,6 +97,46 @@ public class GridBuildingSystem : MonoBehaviour {
         }
         else {
             Debug.Log("Already Occupied");
+        }
+    }
+    
+    public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z) {
+        if (givenPlacedObjectTypeSo == null) {
+            return null;
+        }
+
+        List<Vector2Int> gridPositionList = givenPlacedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
+
+        bool freeSlot = true;
+        foreach (Vector2Int gridposition in gridPositionList) {
+            GridObject onPositionObject = grid.GetGridObject(gridposition.x,gridposition.y);
+            if (onPositionObject == null) {
+                return null;
+            }
+            if (!onPositionObject.CanBuild()) {
+                //cannot build
+                freeSlot = false;
+                break;
+            }
+        }
+
+        //GridObject gridObject = grid.GetGridObject(x, z);
+        if (freeSlot) {
+            Vector2Int rotationOffset = givenPlacedObjectTypeSo.GetRotationOffset(dir);
+            Vector3 placedObjectWorldPosition =
+                grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
+
+            PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  givenPlacedObjectTypeSo);
+            
+            foreach (Vector2Int gridposition in gridPositionList) {
+                grid.GetGridObject(gridposition.x, gridposition.y).SetPlacedObject(placedObject);
+            }
+            OnObjectPlaced?.Invoke(this, EventArgs.Empty);
+            return placedObject;
+        }
+        else {
+            Debug.Log("Already Occupied");
+            return null;
         }
     }
 
@@ -145,7 +191,7 @@ public class GridBuildingSystem : MonoBehaviour {
         OnSelectedChanged?.Invoke(this, EventArgs.Empty);
     }
     
-    public class GridObject : SaveableObject {
+    public class GridObject {
 
         private GridXZ<GridObject> grid;
         private int x;
@@ -176,17 +222,9 @@ public class GridBuildingSystem : MonoBehaviour {
         public bool CanBuild() {
             return this.placedObject == null;
         }
-
+        
         public override string ToString() {
             return x + "," + z + "\n" + placedObject;
-        }
-
-        public override void Load(string[] values) {
-            base.Load(values);
-        }
-
-        public override void Save(int id) {
-            base.Save(id);
         }
     }
 }

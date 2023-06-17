@@ -102,10 +102,12 @@ public class GridBuildingSystem : MonoBehaviour {
         }
     }
     
-    public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z) {
+    public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z, int rot) {
         if (givenPlacedObjectTypeSo == null) {
             return null;
         }
+
+        dir = givenPlacedObjectTypeSo.RotationToDir(rot);
 
         List<Vector2Int> gridPositionList = givenPlacedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
 

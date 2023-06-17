@@ -39,6 +39,17 @@ public class PlacedObjectTypeSO : ScriptableObject {
         }
     }
 
+    public Dir RotationToDir(int rotation) {
+        int rotnormalized = rotation % 360;
+        switch (rotnormalized) {
+            case 0: return Dir.Down;
+            case 90: return Dir.Left;
+            case 180: return Dir.Up;
+            case 270: return Dir.Right;
+            default: return Dir.Down;
+        }
+    }
+
     public Vector2Int GetRotationOffset(Dir dir) {
         switch (dir) {
             default:

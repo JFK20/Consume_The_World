@@ -21,7 +21,8 @@ public abstract class SaveableObject : MonoBehaviour {
     }
 
     public virtual void Save(int id) {
-        PlayerPrefs.SetString(id.ToString(), objectType.ToString() + "_" + transform.position.ToString());
+        PlayerPrefs.SetString(id.ToString(),
+            objectType.ToString() + "_" + transform.position.ToString() + "_" + transform.localRotation);
     }
 
     public virtual void Load(string[] values) {

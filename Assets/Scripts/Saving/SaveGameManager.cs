@@ -58,15 +58,20 @@ public class SaveGameManager : MonoBehaviour {
             Vector3Int pos = StringToIntVector(value[1]);
             int cellSize = GridBuildingSystem.Instance.grid.GetCellSize();
             pos = new Vector3Int(pos.x / cellSize,pos.y / cellSize,pos.z / cellSize);
+            
+            Vector3 rotQuan = StringToQuaternion(value[2]).eulerAngles;
+            
+            float rotf = rotQuan.y;
+            int rot = (int)rotf;
 
             PlacedObject tmp = null;
             
             switch (value[0]) {
                 case "Lincoln":
-                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.z);
+                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.z, rot);
                     break;
                 case "WhiteHouse":
-                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO, pos.x, pos.z);
+                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO, pos.x, pos.z, rot);
                     break;
             }
 
@@ -90,6 +95,10 @@ public class SaveGameManager : MonoBehaviour {
     }
 
     public Quaternion StringToQuaternion(string value) {
-        return Quaternion.identity;
+        value = value.Trim(new char[] {'(', ')'});
+        value = value.Replace(" ", "");
+        string[] pos = value.Split(",");
+        
+        return new Quaternion(float.Parse(pos[0], CultureInfo.InvariantCulture),float.Parse(pos[1], CultureInfo.InvariantCulture),float.Parse(pos[2], CultureInfo.InvariantCulture),float.Parse(pos[3], CultureInfo.InvariantCulture));
     }
 }

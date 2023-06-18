@@ -3,16 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-enum ObjectType {
+public enum ObjectType {
     Lincoln,
     WhiteHouse,
 }
 
 public abstract class SaveableObject : MonoBehaviour {
     protected string save;
-    
+
     [SerializeField]
     private ObjectType objectType;
+
+    public ObjectType getObjectType() {
+        return objectType;
+    }
     
     // Start is called before the first frame update
     private void Start()
@@ -21,8 +25,7 @@ public abstract class SaveableObject : MonoBehaviour {
     }
 
     public virtual void Save(int id) {
-        PlayerPrefs.SetString(id.ToString(),
-            objectType.ToString() + "_" + transform.position.ToString() + "_" + transform.localRotation);
+        
     }
 
     public virtual void Load(string[] values) {

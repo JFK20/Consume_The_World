@@ -6,6 +6,7 @@ public class PlacedObject : SaveableObject  {
 
     public static PlacedObject Create(Vector3 WorldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir,
         PlacedObjectTypeSO placedObjectTypeSO) {
+        //Debug.Log(origin);
         Transform placedObjectTransform = Instantiate(placedObjectTypeSO.prefab,
             WorldPosition,
             Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0));
@@ -37,6 +38,10 @@ public class PlacedObject : SaveableObject  {
     }
 
     public override void Save(int id) {
-        base.Save(id);
+        string pos = origin.ToString();
+        string data = getObjectType().ToString() + "_" + pos + "_" + transform.localRotation;
+        //Debug.Log(data);
+        PlayerPrefs.SetString(id.ToString(),
+            data);
     }
 }

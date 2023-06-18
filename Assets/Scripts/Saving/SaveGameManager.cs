@@ -52,12 +52,15 @@ public class SaveGameManager : MonoBehaviour {
 
         for (int i = 0; i < objectCount; i++) {
             //Value 0 object Type 
-            //Vale 1 Position
+            //Value 1 Position
+            //Value2 Rotation
             string[] value = PlayerPrefs.GetString(i.ToString()).Split("_");
 
-            Vector3Int pos = StringToIntVector(value[1]);
-            int cellSize = GridBuildingSystem.Instance.grid.GetCellSize();
-            pos = new Vector3Int(pos.x / cellSize,pos.y / cellSize,pos.z / cellSize);
+            //Debug.Log("Positon from string: " + value[1]);
+            Vector2Int pos = StringToIntVector2(value[1]);
+            //Debug.Log("Positon from StringToVector2: " + pos);
+            //int cellSize = GridBuildingSystem.Instance.grid.GetCellSize();
+            //pos = new Vector2Int(pos.x / cellSize,pos.y / cellSize);
             
             Vector3 rotQuan = StringToQuaternion(value[2]).eulerAngles;
             
@@ -66,12 +69,13 @@ public class SaveGameManager : MonoBehaviour {
 
             PlacedObject tmp = null;
             
+            //Debug.Log("position: x:" + pos.x + " y:" + pos.z);
             switch (value[0]) {
                 case "Lincoln":
-                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.z, rot);
+                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.y, rot);
                     break;
                 case "WhiteHouse":
-                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO, pos.x, pos.z, rot);
+                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO, pos.x, pos.y, rot);
                     break;
             }
 
@@ -82,7 +86,7 @@ public class SaveGameManager : MonoBehaviour {
         }
     }
 
-    public Vector3Int StringToIntVector(string value) {
+    public Vector3Int StringToIntVector3(string value) {
         value = value.Trim(new char[] {'(', ')'});
         value = value.Replace(" ", "");
         string[] pos = value.Split(",");
@@ -92,6 +96,25 @@ public class SaveGameManager : MonoBehaviour {
             intpos[i] = Mathf.RoundToInt(tmp);
         }
         return new Vector3Int(intpos[0],intpos[1],intpos[2]);
+    }
+    
+    /// <summary>
+    /// Converts an String to an Vector2Int <br/>
+    /// Can Convert if String Contains Data as Ints
+    /// </summary>
+    /// <param name="value"> String </param>
+    /// <returns>
+    ///  Vector2Int
+    /// </returns>
+    public Vector2Int StringToIntVector2(string value) {
+        value = value.Trim(new char[] {'(', ')'});
+        value = value.Replace(" ", "");
+        string[] pos = value.Split(",");
+        int[] intpos = new int[2];
+        for (int i = 0; i < 2; i++) {
+            intpos[i] = int.Parse(pos[i], CultureInfo.InvariantCulture);
+        }
+        return new Vector2Int(intpos[0],intpos[1]);
     }
 
     public Quaternion StringToQuaternion(string value) {

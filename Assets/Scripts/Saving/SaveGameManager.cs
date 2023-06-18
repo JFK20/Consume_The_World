@@ -27,11 +27,17 @@ public class SaveGameManager : MonoBehaviour {
 
     public void Save() {
         int savedObjectsAmount = SaveableObjectList.Count;
-        PlayerPrefs.SetInt("ObjectCount" , savedObjectsAmount);
+        string[] objs = new string[savedObjectsAmount];
         
         for (int i = 0; i < savedObjectsAmount ; i++) {
-            SaveableObjectList[i].Save(i);
+            objs[i] = SaveableObjectList[i].Save(i);
         }
+
+        string everything = savedObjectsAmount + "\n";
+        foreach (string data in objs) {
+            everything += data + "\n";
+        }
+        SaveSystem.Save("test",everything,true);
     }
 
     public void Load() {
@@ -48,20 +54,24 @@ public class SaveGameManager : MonoBehaviour {
         
         SaveableObjectList.Clear();
         
-        int objectCount = PlayerPrefs.GetInt("ObjectCount");
+        
+        string loadedData = SaveSystem.Load("test");
+        string[] row = loadedData.Split("\n");
+        for (int i = 0; i < row.Length; i++) {
+            row[i] = row[i].Replace("\n", "");
+            row[i] = row[i].Trim();
+        }
+        int objectCount = int.Parse(row[0].Trim());
+        Debug.Log(row[0] + "\n" + row[1]);
 
-        for (int i = 0; i < objectCount; i++) {
+        for (int i = 1; i <= objectCount; i++) {
             //Value 0 object Type 
             //Value 1 Position
             //Value2 Rotation
-            string[] value = PlayerPrefs.GetString(i.ToString()).Split("_");
-
-            //Debug.Log("Positon from string: " + value[1]);
-            Vector2Int pos = StringToIntVector2(value[1]);
-            //Debug.Log("Positon from StringToVector2: " + pos);
-            //int cellSize = GridBuildingSystem.Instance.grid.GetCellSize();
-            //pos = new Vector2Int(pos.x / cellSize,pos.y / cellSize);
+            string[] value = row[i].Split("_");
             
+            Vector2Int pos = StringToIntVector2(value[1]);
+
             Vector3 rotQuan = StringToQuaternion(value[2]).eulerAngles;
             
             float rotf = rotQuan.y;
@@ -69,7 +79,6 @@ public class SaveGameManager : MonoBehaviour {
 
             PlacedObject tmp = null;
             
-            //Debug.Log("position: x:" + pos.x + " y:" + pos.z);
             switch (value[0]) {
                 case "Lincoln":
                     tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.y, rot);

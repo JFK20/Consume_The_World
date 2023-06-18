@@ -24,8 +24,8 @@ public abstract class SaveableObject : MonoBehaviour {
         SaveGameManager.Instance.SaveableObjectList.Add(this);
     }
 
-    public virtual void Save(int id) {
-        
+    public virtual string Save(int id) {
+        return null;
     }
 
     public virtual void Load(string[] values) {

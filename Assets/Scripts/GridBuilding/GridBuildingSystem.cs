@@ -90,6 +90,7 @@ public class GridBuildingSystem : MonoBehaviour {
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
 
+            //Debug.Log("pos x:" + x + " pos z:" + z);
             PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo);
             
             foreach (Vector2Int gridposition in gridPositionList) {

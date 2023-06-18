@@ -22,6 +22,9 @@ public class PlacedObject : SaveableObject  {
     private PlacedObjectTypeSO placedObjectTypeSO;
     private Vector2Int origin;
     private PlacedObjectTypeSO.Dir dir;
+    [SerializeField] private Canvas inventory;
+    
+    public Canvas GetInventory => inventory;
 
     public List<Vector2Int> GetGridPositionList() {
         return placedObjectTypeSO.GetGridPositionList(origin, dir);

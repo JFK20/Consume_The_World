@@ -32,7 +32,7 @@ public abstract class SaveableObject : MonoBehaviour {
         
     }
 
-    public  void DestroySaveable() {
-        
+    public void DestroySaveable() {
+        SaveGameManager.Instance.SaveableObjectList.Remove(this);
     }
 }

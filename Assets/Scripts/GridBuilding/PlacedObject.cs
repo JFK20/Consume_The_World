@@ -29,7 +29,8 @@ public class PlacedObject : SaveableObject  {
 
     public void DestroySelf() {
         Destroy(gameObject);
-        SaveGameManager.Instance.SaveableObjectList.Remove(this);
+        //SaveGameManager.Instance.SaveableObjectList.Remove(this);
+        DestroySaveable();
     }
     
     public override void Load(string[] values) {

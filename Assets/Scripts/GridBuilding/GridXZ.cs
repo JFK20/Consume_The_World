@@ -14,11 +14,11 @@ public class GridXZ<TGridObject> {
 
     private int width;
     private int height;
-    private float cellSize;
+    private int cellSize;
     private Vector3 originPosition;
     private TGridObject[,] gridArray;
 
-    public GridXZ(int width, int height, float cellSize, Vector3 originPosition, Func<GridXZ<TGridObject>, int, int, TGridObject> createGridObject) {
+    public GridXZ(int width, int height, int cellSize, Vector3 originPosition, Func<GridXZ<TGridObject>, int, int, TGridObject> createGridObject) {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
@@ -32,7 +32,7 @@ public class GridXZ<TGridObject> {
             }
         }
 
-        bool showDebug = false;
+        bool showDebug = true;
         if (showDebug) {
             TextMesh[,] debugTextArray = new TextMesh[width, height];
 
@@ -60,7 +60,7 @@ public class GridXZ<TGridObject> {
         return height;
     }
 
-    public float GetCellSize() {
+    public int GetCellSize() {
         return cellSize;
     }
 

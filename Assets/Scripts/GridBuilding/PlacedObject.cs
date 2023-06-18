@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlacedObject : MonoBehaviour {
+public class PlacedObject : SaveableObject  {
 
     public static PlacedObject Create(Vector3 WorldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir,
         PlacedObjectTypeSO placedObjectTypeSO) {
@@ -29,6 +29,17 @@ public class PlacedObject : MonoBehaviour {
 
     public void DestroySelf() {
         Destroy(gameObject);
+        //SaveGameManager.Instance.SaveableObjectList.Remove(this);
+        DestroySaveable();
     }
     
+    public override void Load(string[] values) {
+        // Load Values For Inventory
+    }
+
+    public override string Save(int id) {
+        string pos = origin.ToString();
+        string data = getObjectType().ToString() + "_" + pos + "_" + transform.localRotation;
+        return data;
+    }
 }

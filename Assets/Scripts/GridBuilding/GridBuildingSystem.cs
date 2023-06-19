@@ -66,7 +66,14 @@ public class GridBuildingSystem : MonoBehaviour {
             getInventory();
         }
     }
+    
+    private void getInventory() {
+        InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
+    }
 
+    /// <summary>
+    /// Builds the Object with the Currently Selected Prefab at the MousePosition 
+    /// </summary>
     private void Build() {
         if (placedObjectTypeSo == null) {
             return;
@@ -110,10 +117,14 @@ public class GridBuildingSystem : MonoBehaviour {
         }
     }
 
-    private void getInventory() {
-        InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
-    }
-    
+    /// <summary>
+    /// Builds a Give PlacedObjectSoPrefab at given Location with given Rotation
+    /// </summary>
+    /// <param name="givenPlacedObjectTypeSo"> PlacedObjectTypeSo </param>
+    /// <param name="x"> int </param>
+    /// <param name="z"> int </param>
+    /// <param name="rot"> Dir </param>
+    /// <returns></returns>
     public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z, PlacedObjectTypeSO.Dir rot) {
         if (givenPlacedObjectTypeSo == null) {
             return null;

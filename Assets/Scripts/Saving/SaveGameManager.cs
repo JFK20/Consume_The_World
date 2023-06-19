@@ -25,6 +25,10 @@ public class SaveGameManager : MonoBehaviour {
         SaveableObjectList = new List<SaveableObject>();
     }
 
+    /// <summary>
+    /// goes through all Saveable Items and calling save on them <br/>
+    /// the Return string is given to the Save System which writes it to the File
+    /// </summary>
     public void Save() {
         int savedObjectsAmount = SaveableObjectList.Count;
         string[] objs = new string[savedObjectsAmount];
@@ -39,7 +43,12 @@ public class SaveGameManager : MonoBehaviour {
         }
         SaveSystem.Save("test",everything,true);
     }
-
+    
+    /// <summary>
+    /// First up deletes all Saveable Objects on the Grid <br/>
+    /// Then the File is read and the String is Split at _ <br/>
+    /// The String Data is read and the Object is created and Load is called on the Object 
+    /// </summary>
     public void Load() {
         foreach (SaveableObject obj in SaveableObjectList) {
             if (obj != null) {
@@ -132,6 +141,11 @@ public class SaveGameManager : MonoBehaviour {
         return new Quaternion(float.Parse(pos[0], CultureInfo.InvariantCulture),float.Parse(pos[1], CultureInfo.InvariantCulture),float.Parse(pos[2], CultureInfo.InvariantCulture),float.Parse(pos[3], CultureInfo.InvariantCulture));
     }
     
+    /// <summary>
+    ///  Converts a String to a Dir
+    /// </summary>
+    /// <param name="rot"> string </param>
+    /// <returns> Dir </returns>
     public PlacedObjectTypeSO.Dir StringToDir(string rot) {
         switch (rot) {
             case "Down": return PlacedObjectTypeSO.Dir.Down;

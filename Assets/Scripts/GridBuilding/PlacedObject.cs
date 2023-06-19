@@ -38,6 +38,11 @@ public class PlacedObject : SaveableObject  {
         DestroySaveable();
     }
     
+    /// <summary>
+    /// Gets the String and cuts it at * and parses the Data
+    /// and Creates the Item 
+    /// </summary>
+    /// <param name="values"> string </param>
     public override void Load(string values) {
         // Load Values For Inventory
         string[] items = values.Split("*");
@@ -66,6 +71,10 @@ public class PlacedObject : SaveableObject  {
         return data;
     }
 
+    /// <summary>
+    /// cycels through all the slots and converts the Items to Strings
+    /// </summary>
+    /// <returns></returns>
     private string SaveItems() {
         string data = "";
         for (int i = 0; i < inventorySlots.Length; i++) {

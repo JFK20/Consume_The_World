@@ -11,10 +11,10 @@ public class PlacedObject : SaveableObject  {
             Quaternion.Euler(0, placedObjectTypeSO.GetRotationAngle(dir), 0));
 
         PlacedObject placedObject = placedObjectTransform.GetComponent<PlacedObject>();
+        placedObject.inventorySlots = placedObjectTransform.gameObject.GetComponentsInChildren<InventorySlot>(includeInactive: true);
         placedObject.placedObjectTypeSO = placedObjectTypeSO;
         placedObject.origin = origin;
         placedObject.dir = dir;
-        
         return placedObject;
     }
     
@@ -22,6 +22,11 @@ public class PlacedObject : SaveableObject  {
     private PlacedObjectTypeSO placedObjectTypeSO;
     private Vector2Int origin;
     private PlacedObjectTypeSO.Dir dir;
+    [SerializeField] private Canvas inventory;
+    private InventorySlot[] inventorySlots = null;
+
+    public InventorySlot[] GetInventorySlots => inventorySlots;
+    public Canvas GetInventory => inventory;
 
     public List<Vector2Int> GetGridPositionList() {
         return placedObjectTypeSO.GetGridPositionList(origin, dir);
@@ -33,13 +38,60 @@ public class PlacedObject : SaveableObject  {
         DestroySaveable();
     }
     
-    public override void Load(string[] values) {
+    /// <summary>
+    /// Gets the String and cuts it at * and parses the Data
+    /// and Creates the Item 
+    /// </summary>
+    /// <param name="values"> string </param>
+    public override void Load(string values) {
         // Load Values For Inventory
+        string[] items = values.Split("*");
+        //data 0 slotnumber
+        //data 1 item
+        //data 2 count
+        foreach (string item in items) {
+            if (!item.Equals("")) {
+                Debug.Log(item);
+                string[] data = item.Split(":");
+                Debug.Log(data[0] + "," + data[1] + "," + data[2]);
+                int count = int.Parse(data[2]);
+                int slotNumber = int.Parse(data[0]);
+                GameObject newItemGo = Instantiate(InventoryManager.Instance.inventoryItemPrefab, inventorySlots[slotNumber].transform);
+                InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
+                inventoryItem.InitialiseItem(StringToItem(data[1]), count);
+            }
+        }
+        
     }
 
     public override string Save(int id) {
+        string items = SaveItems();
         string pos = origin.ToString();
-        string data = getObjectType().ToString() + "_" + pos + "_" + transform.localRotation;
+        string data = getObjectType().ToString() + "_" + pos + "_" + dir.ToString() + "_" + items;
         return data;
+    }
+
+    /// <summary>
+    /// cycels through all the slots and converts the Items to Strings
+    /// </summary>
+    /// <returns></returns>
+    private string SaveItems() {
+        string data = "";
+        for (int i = 0; i < inventorySlots.Length; i++) {
+            InventoryItem toSave = inventorySlots[i].GetComponentInChildren<InventoryItem>(includeInactive: true);
+            if (toSave != null) {
+                data += i.ToString() + ":";
+                data += toSave.item.type.ToString()+ ":";
+                data += toSave.count + "*";
+            }
+        }
+        return data;
+    }
+
+    private Item StringToItem(string item) {
+        switch (item) {
+                case "Test": return Resources.Load("Inventory/Test") as Item;
+                default: return Resources.Load("Inventory/Test") as Item;
+        }
     }
 }

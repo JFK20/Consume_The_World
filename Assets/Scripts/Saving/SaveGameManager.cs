@@ -25,6 +25,10 @@ public class SaveGameManager : MonoBehaviour {
         SaveableObjectList = new List<SaveableObject>();
     }
 
+    /// <summary>
+    /// goes through all Saveable Items and calling save on them <br/>
+    /// the Return string is given to the Save System which writes it to the File
+    /// </summary>
     public void Save() {
         int savedObjectsAmount = SaveableObjectList.Count;
         string[] objs = new string[savedObjectsAmount];
@@ -39,7 +43,12 @@ public class SaveGameManager : MonoBehaviour {
         }
         SaveSystem.Save("test",everything,true);
     }
-
+    
+    /// <summary>
+    /// First up deletes all Saveable Objects on the Grid <br/>
+    /// Then the File is read and the String is Split at _ <br/>
+    /// The String Data is read and the Object is created and Load is called on the Object 
+    /// </summary>
     public void Load() {
         foreach (SaveableObject obj in SaveableObjectList) {
             if (obj != null) {
@@ -62,20 +71,18 @@ public class SaveGameManager : MonoBehaviour {
             row[i] = row[i].Trim();
         }
         int objectCount = int.Parse(row[0].Trim());
-        Debug.Log(row[0] + "\n" + row[1]);
+        //Debug.Log(row[0] + "\n" + row[1]);
 
         for (int i = 1; i <= objectCount; i++) {
             //Value 0 object Type 
             //Value 1 Position
-            //Value2 Rotation
+            //Value2 Dir
+            //Value3 Items
             string[] value = row[i].Split("_");
             
             Vector2Int pos = StringToIntVector2(value[1]);
 
-            Vector3 rotQuan = StringToQuaternion(value[2]).eulerAngles;
-            
-            float rotf = rotQuan.y;
-            int rot = (int)rotf;
+            PlacedObjectTypeSO.Dir rot = StringToDir(value[2]);
 
             PlacedObject tmp = null;
             
@@ -90,7 +97,7 @@ public class SaveGameManager : MonoBehaviour {
 
             if (tmp != null) {
                 // Implement Later for Inventory
-                //placedObject.Load();
+                tmp.Load(value[3]);
             }
         }
     }
@@ -132,5 +139,20 @@ public class SaveGameManager : MonoBehaviour {
         string[] pos = value.Split(",");
         
         return new Quaternion(float.Parse(pos[0], CultureInfo.InvariantCulture),float.Parse(pos[1], CultureInfo.InvariantCulture),float.Parse(pos[2], CultureInfo.InvariantCulture),float.Parse(pos[3], CultureInfo.InvariantCulture));
+    }
+    
+    /// <summary>
+    ///  Converts a String to a Dir
+    /// </summary>
+    /// <param name="rot"> string </param>
+    /// <returns> Dir </returns>
+    public PlacedObjectTypeSO.Dir StringToDir(string rot) {
+        switch (rot) {
+            case "Down": return PlacedObjectTypeSO.Dir.Down;
+            case "Up": return PlacedObjectTypeSO.Dir.Up;
+            case "Left": return PlacedObjectTypeSO.Dir.Left;
+            case "Right": return PlacedObjectTypeSO.Dir.Right;
+            default: return PlacedObjectTypeSO.Dir.Down;
+        }
     }
 }

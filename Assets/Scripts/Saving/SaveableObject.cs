@@ -28,7 +28,7 @@ public abstract class SaveableObject : MonoBehaviour {
         return null;
     }
 
-    public virtual void Load(string[] values) {
+    public virtual void Load(string values) {
         
     }
 

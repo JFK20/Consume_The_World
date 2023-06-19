@@ -17,6 +17,8 @@ public class GridBuildingSystem : MonoBehaviour {
     public GridXZ<GridObject> grid { get; private set; }
     private PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
 
+    private bool InventoryOpen;
+
     private void Awake() {
         Instance = this;
         
@@ -60,8 +62,18 @@ public class GridBuildingSystem : MonoBehaviour {
             SaveGameManager.Instance.Load();
             Debug.Log("Loaded");
         }
+        if (Input.GetKeyDown(KeyCode.E)) {
+            getInventory();
+        }
+    }
+    
+    private void getInventory() {
+        InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
     }
 
+    /// <summary>
+    /// Builds the Object with the Currently Selected Prefab at the MousePosition 
+    /// </summary>
     private void Build() {
         if (placedObjectTypeSo == null) {
             return;
@@ -72,8 +84,9 @@ public class GridBuildingSystem : MonoBehaviour {
         List<Vector2Int> gridPositionList = placedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
 
         bool freeSlot = true;
+        GridObject onPositionObject = null;
         foreach (Vector2Int gridposition in gridPositionList) {
-            GridObject onPositionObject = grid.GetGridObject(gridposition.x,gridposition.y);
+            onPositionObject = grid.GetGridObject(gridposition.x,gridposition.y);
             if (onPositionObject == null) {
                 return;
             }
@@ -100,15 +113,24 @@ public class GridBuildingSystem : MonoBehaviour {
         }
         else {
             Debug.Log("Already Occupied");
+            
         }
     }
-    
-    public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z, int rot) {
+
+    /// <summary>
+    /// Builds a Give PlacedObjectSoPrefab at given Location with given Rotation
+    /// </summary>
+    /// <param name="givenPlacedObjectTypeSo"> PlacedObjectTypeSo </param>
+    /// <param name="x"> int </param>
+    /// <param name="z"> int </param>
+    /// <param name="rot"> Dir </param>
+    /// <returns></returns>
+    public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z, PlacedObjectTypeSO.Dir rot) {
         if (givenPlacedObjectTypeSo == null) {
             return null;
         }
 
-        dir = givenPlacedObjectTypeSo.RotationToDir(rot);
+        dir = rot;
 
         List<Vector2Int> gridPositionList = givenPlacedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
 

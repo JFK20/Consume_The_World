@@ -42,7 +42,7 @@ public class PlacedObject : SaveableObject  {
 
     public override string Save(int id) {
         string pos = origin.ToString();
-        string data = getObjectType().ToString() + "_" + pos + "_" + transform.localRotation;
+        string data = getObjectType().ToString() + "_" + pos + "_" + dir.ToString();
         return data;
     }
 }

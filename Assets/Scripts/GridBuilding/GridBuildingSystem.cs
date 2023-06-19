@@ -114,12 +114,12 @@ public class GridBuildingSystem : MonoBehaviour {
         InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
     }
     
-    public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z, int rot) {
+    public PlacedObject Build(PlacedObjectTypeSO givenPlacedObjectTypeSo, int x, int z, PlacedObjectTypeSO.Dir rot) {
         if (givenPlacedObjectTypeSo == null) {
             return null;
         }
 
-        dir = givenPlacedObjectTypeSo.RotationToDir(rot);
+        dir = rot;
 
         List<Vector2Int> gridPositionList = givenPlacedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
 

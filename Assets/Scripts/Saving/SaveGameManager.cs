@@ -62,20 +62,17 @@ public class SaveGameManager : MonoBehaviour {
             row[i] = row[i].Trim();
         }
         int objectCount = int.Parse(row[0].Trim());
-        Debug.Log(row[0] + "\n" + row[1]);
+        //Debug.Log(row[0] + "\n" + row[1]);
 
         for (int i = 1; i <= objectCount; i++) {
             //Value 0 object Type 
             //Value 1 Position
-            //Value2 Rotation
+            //Value2 Dir
             string[] value = row[i].Split("_");
             
             Vector2Int pos = StringToIntVector2(value[1]);
 
-            Vector3 rotQuan = StringToQuaternion(value[2]).eulerAngles;
-            
-            float rotf = rotQuan.y;
-            int rot = (int)rotf;
+            PlacedObjectTypeSO.Dir rot = StringToDir(value[2]);
 
             PlacedObject tmp = null;
             
@@ -132,5 +129,15 @@ public class SaveGameManager : MonoBehaviour {
         string[] pos = value.Split(",");
         
         return new Quaternion(float.Parse(pos[0], CultureInfo.InvariantCulture),float.Parse(pos[1], CultureInfo.InvariantCulture),float.Parse(pos[2], CultureInfo.InvariantCulture),float.Parse(pos[3], CultureInfo.InvariantCulture));
+    }
+    
+    public PlacedObjectTypeSO.Dir StringToDir(string rot) {
+        switch (rot) {
+            case "Down": return PlacedObjectTypeSO.Dir.Down;
+            case "Up": return PlacedObjectTypeSO.Dir.Up;
+            case "Left": return PlacedObjectTypeSO.Dir.Left;
+            case "Right": return PlacedObjectTypeSO.Dir.Right;
+            default: return PlacedObjectTypeSO.Dir.Down;
+        }
     }
 }

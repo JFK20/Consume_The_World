@@ -8,7 +8,7 @@ using UnityEngine.Tilemaps;
 public class Item : ScriptableObject {
 
     [Header("Only gameplay")]
-    public TileBase tile; //OnMap change to 3D
+    //public TileBase tile; //OnMap change to 3D
     //public GameObject prefab;
     public ItemType type; // ItemType
     //public Vector2Int range = new Vector2Int(5, 4);
@@ -28,5 +28,6 @@ public class Item : ScriptableObject {
 public enum ItemType {
     Ore,
     Tool,
-    Weapon
+    Weapon,
+    Test,
 }

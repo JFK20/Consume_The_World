@@ -9,6 +9,7 @@ public class DemoScript : MonoBehaviour {
 
     public void PickupItem(int id) {
         bool result = inventoryManager.AddItem(itemsToPickup[id], InventorySlot.IO.PrimaryInput);
+        Debug.Log(result);
     }
 
     public void Update() {

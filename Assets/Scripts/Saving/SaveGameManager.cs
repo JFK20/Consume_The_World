@@ -68,6 +68,7 @@ public class SaveGameManager : MonoBehaviour {
             //Value 0 object Type 
             //Value 1 Position
             //Value2 Dir
+            //Value3 Items
             string[] value = row[i].Split("_");
             
             Vector2Int pos = StringToIntVector2(value[1]);
@@ -87,7 +88,7 @@ public class SaveGameManager : MonoBehaviour {
 
             if (tmp != null) {
                 // Implement Later for Inventory
-                //placedObject.Load();
+                tmp.Load(value[3]);
             }
         }
     }

@@ -33,7 +33,7 @@ public class InventoryManager : MonoBehaviour {
             currentInventory = placedObject.GetInventory;
             currentInventory.gameObject.SetActive(true);
             isInventoryOpen = true;
-            inventorySlots = currentInventory.gameObject.GetComponentsInChildren<InventorySlot>();
+            inventorySlots = placedObject.GetInventorySlots;
         }
         else if(isInventoryOpen) {
             currentInventory.gameObject.SetActive(false);

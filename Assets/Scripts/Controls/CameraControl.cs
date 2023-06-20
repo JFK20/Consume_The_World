@@ -19,17 +19,29 @@ public class CameraControl : MonoBehaviour {
     private Vector2 lastMousePosition;
     private Vector3 followOffset;
 
+    public static CameraControl Instance { get; private set; }
+
     private void Awake() {
+        Instance = this;
+        
         followOffset = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset;
     }
 
-    void Update() {
+    public void UpdateCamera() {
         HandleCameraRotation();
         if(useEdgeScrolling) HandleCameraMovementEdgeScrolling();
         if(useDragPen) HandleCameraMovementDragPen();
         HandleCameraMovement();
         HandleCameraZoom();
     }
+    
+    /*void Update() {
+        HandleCameraRotation();
+        if(useEdgeScrolling) HandleCameraMovementEdgeScrolling();
+        if(useDragPen) HandleCameraMovementDragPen();
+        HandleCameraMovement();
+        HandleCameraZoom();
+    }*/
     
     private void HandleCameraMovement() {
         Vector3 inputDir = new Vector3(0, 0, 0);

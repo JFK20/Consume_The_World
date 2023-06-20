@@ -13,7 +13,7 @@ public class DemoScript : MonoBehaviour {
     }
 
     public void Update() {
-        if (Input.GetKeyDown(KeyCode.A)) {
+        if (Input.GetKeyDown(KeyCode.K)) {
             PickupItem(0);
         }
     }

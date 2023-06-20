@@ -46,5 +46,6 @@ public class Controls : MonoBehaviour {
         if (Input.GetKeyDown(openInventory)) {
             gridBuildingSystem.GetInventory();
         }
+        CameraControl.Instance.UpdateCamera();
     }
 }

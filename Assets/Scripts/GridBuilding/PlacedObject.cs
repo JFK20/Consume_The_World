@@ -72,7 +72,7 @@ public class PlacedObject : SaveableObject  {
     }
 
     /// <summary>
-    /// cycels through all the slots and converts the Items to Strings
+    /// cycles through all the slots and converts the Items to Strings
     /// </summary>
     /// <returns></returns>
     private string SaveItems() {
@@ -90,8 +90,8 @@ public class PlacedObject : SaveableObject  {
 
     private Item StringToItem(string item) {
         switch (item) {
-                case "Test": return Resources.Load("Inventory/Test") as Item;
-                default: return Resources.Load("Inventory/Test") as Item;
+                case "Test": return Resources.Load("Inventory/So/Test") as Item;
+                default: return Resources.Load("Inventory/So/Test") as Item;
         }
     }
 }

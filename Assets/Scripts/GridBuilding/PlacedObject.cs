@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlacedObject : SaveableObject  {
 
@@ -30,6 +31,10 @@ public class PlacedObject : SaveableObject  {
 
     public List<Vector2Int> GetGridPositionList() {
         return placedObjectTypeSO.GetGridPositionList(origin, dir);
+    }
+
+    public void Demolish() {
+        GridBuildingSystem.Instance.Demolish(this);
     }
 
     public void DestroySelf() {

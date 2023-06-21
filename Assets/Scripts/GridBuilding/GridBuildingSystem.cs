@@ -161,6 +161,19 @@ public class GridBuildingSystem : MonoBehaviour {
         }
         
     }
+    public void Demolish(PlacedObject placedObject) {
+        //gridObject.GetPlacedObject();
+        if (placedObject == null) {
+            return;
+        }
+        placedObject.DestroySelf();
+        List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
+        
+        foreach (Vector2Int gridposition in gridPositionList) {
+            grid.GetGridObject(gridposition.x, gridposition.y).ClearPlacedObject();
+        }
+        
+    }
     
     public Vector3 GetMouseWorldSnappedPosition() {
         Vector3 mousePosition = Mouse3D.GetMouseWorldPosition();

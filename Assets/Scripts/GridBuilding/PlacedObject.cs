@@ -35,6 +35,7 @@ public class PlacedObject : SaveableObject  {
 
     public void Demolish() {
         GridBuildingSystem.Instance.Demolish(this);
+        Controls.Instance.inInventory = false;
     }
 
     public void DestroySelf() {

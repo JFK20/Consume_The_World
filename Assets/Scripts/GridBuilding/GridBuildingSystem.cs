@@ -46,6 +46,16 @@ public class GridBuildingSystem : MonoBehaviour {
             (GridXZ<GridObject> g, int x, int z) => new GridObject(g, x, z));
 
         placedObjectTypeSo = placedObjectTypeSoList[0];
+        GenerateFloor();
+    }
+
+    public void GenerateFloor() {
+        for (int i = 0; i < grid.GetWidth(); i++) {
+            for (int j = 0; j < grid.GetHeight(); j++) {
+                GridObject gridObject = grid.GetGridObject(new Vector3(i * grid.GetCellSize(), 0, j * grid.GetCellSize()));
+                gridObject.Ground = Instantiate(Resources.Load("Building/Floor/Grass") as GameObject, new Vector3(i * grid.GetCellSize(),0,j * grid.GetCellSize()), Quaternion.identity );
+            }
+        }
     }
     
     /// <summary>
@@ -216,6 +226,13 @@ public class GridBuildingSystem : MonoBehaviour {
         private int z;
 
         private PlacedObject placedObject;
+
+        private GameObject ground;
+
+        public GameObject Ground {
+            get => ground;
+            set => ground = value;
+        }
 
         public GridObject(GridXZ<GridObject> grid, int x, int z) {
             this.grid = grid;

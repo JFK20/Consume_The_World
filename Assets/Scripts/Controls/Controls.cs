@@ -1,16 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Controls : MonoBehaviour {
+    public static Controls Instance { get; private set; }
+    
     [SerializeField] private GridBuildingSystem gridBuildingSystem;
 
     [SerializeField] private KeyCode rotation;
     [SerializeField] private KeyCode openInventory;
     [SerializeField] private KeyCode quickSave;
     [SerializeField] private KeyCode quickLoad;
-    private bool inInventory;
+    public bool inInventory;
 
+
+    public void Awake() {
+        Instance = this;
+    }
 
     // Update is called once per frame
     void Update()

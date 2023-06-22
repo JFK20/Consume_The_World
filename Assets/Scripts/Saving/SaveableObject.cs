@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum ObjectType {
-    Lincoln,
-    WhiteHouse,
+    PlaceableObject,
+    Ground,
 }
 
 public abstract class SaveableObject : MonoBehaviour {

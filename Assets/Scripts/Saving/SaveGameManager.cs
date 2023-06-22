@@ -31,13 +31,15 @@ public class SaveGameManager : MonoBehaviour {
     /// </summary>
     public void Save() {
         int savedObjectsAmount = SaveableObjectList.Count;
+        string gridSize = new Vector2Int(GridBuildingSystem.Instance.grid.GetWidth(),
+            GridBuildingSystem.Instance.grid.GetHeight()).ToString();
         string[] objs = new string[savedObjectsAmount];
         
         for (int i = 0; i < savedObjectsAmount ; i++) {
             objs[i] = SaveableObjectList[i].Save(i);
         }
 
-        string everything = savedObjectsAmount + "\n";
+        string everything = savedObjectsAmount + "\n" + gridSize + "\n";
         foreach (string data in objs) {
             everything += data + "\n";
         }
@@ -73,37 +75,61 @@ public class SaveGameManager : MonoBehaviour {
             row[i] = row[i].Trim();
         }
         int objectCount = int.Parse(row[0].Trim());
+        Vector2Int gridSize = StringToIntVector2(row[1].Trim());
         //Debug.Log(row[0] + "\n" + row[1]);
 
-        for (int i = 1; i <= objectCount; i++) {
-            //Value 0 object Type 
-            //Value 1 Position
-            //Value2 Dir
-            //Value3 Items
+        GroundStruct[] groundStructs = new GroundStruct[gridSize.x * gridSize.y];
+        int index = 0;
+        
+        for (int i = 2; i <= objectCount + 1; i++) {
+            //Value 0 object Type Build,Floor
+            //Value 1 specific building or floor
             string[] value = row[i].Split("_");
             
-            Vector2Int pos = StringToIntVector2(value[1]);
-
-            PlacedObjectTypeSO.Dir rot = StringToDir(value[2]);
-
-            PlacedObject tmp = null;
-            
             switch (value[0]) {
-                case "Lincoln":
-                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.y, rot);
-                    break;
-                case "WhiteHouse":
-                    tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO, pos.x, pos.y, rot);
-                    break;
+                case "PlaceableObject": LoadPlaceableObject(value); break;
+                case "Ground": groundStructs[index] = LoadGroundObject(value);
+                    index++; break;
             }
 
-            if (tmp != null) {
-                // Implement Later for Inventory
-                tmp.Load(value[3]);
-            }
         }
+
+        GridBuildingSystem.Instance.GenerateFloor(groundStructs);
     }
 
+    private GroundStruct LoadGroundObject(string[] value) {
+        //Value 1 Grass,Ore etc
+        //Value 2 Position
+        Vector2Int pos = StringToIntVector2(value[2].Trim());
+        GroundType type = StringToGroundType(value[1].Trim());
+        return new GroundStruct(type, pos.x, pos.y);
+    }
+    
+    private void LoadPlaceableObject(string[] value) {
+        //Value 2 Position
+        //Value 3 Dir
+        //Value 4 Items
+        Vector2Int pos = StringToIntVector2(value[2]);
+
+        PlacedObjectTypeSO.Dir rot = StringToDir(value[3]);
+
+        PlacedObject tmp = null;
+            
+        switch (value[1]) {
+            case "Lincoln":
+                tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.y, rot);
+                break;
+            case "WhiteHouse":
+                tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO, pos.x, pos.y, rot);
+                break;
+        }
+
+        if (tmp != null) {
+            // Implement Later for Inventory
+            tmp.Load(value[4]);
+        }
+    }
+    
     public Vector3Int StringToIntVector3(string value) {
         value = value.Trim(new char[] {'(', ')'});
         value = value.Replace(" ", "");
@@ -155,6 +181,14 @@ public class SaveGameManager : MonoBehaviour {
             case "Left": return PlacedObjectTypeSO.Dir.Left;
             case "Right": return PlacedObjectTypeSO.Dir.Right;
             default: return PlacedObjectTypeSO.Dir.Down;
+        }
+    }
+
+    public GroundType StringToGroundType(string type) {
+        switch (type) {
+            case "Ore": return GroundType.Ore;
+            case "Grass": return GroundType.Grass;
+            default: return GroundType.Standard;
         }
     }
 }

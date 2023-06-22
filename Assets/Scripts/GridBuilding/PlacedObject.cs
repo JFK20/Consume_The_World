@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum Building {
+    Lincoln,
+    WhiteHouse,
+}
+
 public class PlacedObject : SaveableObject  {
 
     public static PlacedObject Create(Vector3 WorldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir,
@@ -23,6 +28,7 @@ public class PlacedObject : SaveableObject  {
     private PlacedObjectTypeSO placedObjectTypeSO;
     private Vector2Int origin;
     private PlacedObjectTypeSO.Dir dir;
+    [SerializeField] private Building building;
     [SerializeField] private Canvas inventory;
     private InventorySlot[] inventorySlots = null;
 
@@ -58,9 +64,9 @@ public class PlacedObject : SaveableObject  {
         //data 2 count
         foreach (string item in items) {
             if (!item.Equals("")) {
-                Debug.Log(item);
+                //Debug.Log(item);
                 string[] data = item.Split(":");
-                Debug.Log(data[0] + "," + data[1] + "," + data[2]);
+                //Debug.Log(data[0] + "," + data[1] + "," + data[2]);
                 int count = int.Parse(data[2]);
                 int slotNumber = int.Parse(data[0]);
                 GameObject newItemGo = Instantiate(InventoryManager.Instance.inventoryItemPrefab, inventorySlots[slotNumber].transform);
@@ -74,7 +80,7 @@ public class PlacedObject : SaveableObject  {
     public override string Save(int id) {
         string items = SaveItems();
         string pos = origin.ToString();
-        string data = getObjectType().ToString() + "_" + pos + "_" + dir.ToString() + "_" + items;
+        string data = getObjectType().ToString() + "_" + building.ToString() + "_" + pos + "_" + dir.ToString() + "_" + items;
         return data;
     }
 

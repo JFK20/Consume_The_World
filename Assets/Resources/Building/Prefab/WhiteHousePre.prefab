@@ -47,7 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b2d2060974044841a4d140574d43a2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectType: 1
+  objectType: 0
+  building: 1
   inventory: {fileID: 5889575596012173980}
 --- !u!1 &5846942720078128171
 GameObject:

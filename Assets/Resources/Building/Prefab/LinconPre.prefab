@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectType: 0
+  building: 0
   inventory: {fileID: 8890094225485145822}
 --- !u!1 &4544625167459370828
 GameObject:

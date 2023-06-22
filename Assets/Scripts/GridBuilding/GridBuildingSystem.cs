@@ -27,9 +27,10 @@ public class GridBuildingSystem : MonoBehaviour {
         get => dir;
         set => dir = value;
     }
-    
 
     private bool InventoryOpen;
+
+    public GroundStruct[] GroundObjects;
     
     public void GetInventory() {
         InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
@@ -46,24 +47,32 @@ public class GridBuildingSystem : MonoBehaviour {
             (GridXZ<GridObject> g, int x, int z) => new GridObject(g, x, z));
 
         placedObjectTypeSo = placedObjectTypeSoList[0];
-        GenerateFloor();
+        GenerateFloor(FloorPreset());
     }
 
-    private void GenerateFloor() {
-        GroundStruct[,] groundLocations = new GroundStruct[grid.GetWidth(),grid.GetHeight()];
+    private GroundStruct[] FloorPreset() {
+        GroundStruct[] groundLocations = new GroundStruct[grid.GetWidth() * grid.GetHeight()];
+        int index = 0;
         for (int i = 0; i < grid.GetWidth(); i++) {
             for (int j = 0; j < grid.GetHeight(); j++) {
-                groundLocations[i, j] = new GroundStruct(GroundType.Grass,i, j);
+                groundLocations[index] = new GroundStruct(GroundType.Grass,i, j);
+                index++;
             }
         }
-
-        groundLocations[5, 5].GroundType = GroundType.Ore;
-        for (int i = 0; i < grid.GetWidth(); i++) {
-            for (int j = 0; j < grid.GetHeight(); j++) {
-                GridObject gridObject = grid.GetGridObject(new Vector3(i * grid.GetCellSize(), 0, j * grid.GetCellSize()));
+        
+        //groundLocations[65].GroundType = GroundType.Ore;
+        groundLocations[60].GroundType = GroundType.Ore; //Middle
+        return groundLocations;
+    }
+    
+    public void GenerateFloor(GroundStruct[] groundLocations) {
+        GroundObjects = groundLocations;
+        
+        for (int i = 0; i < groundLocations.Length; i++) {
+            GridObject gridObject = grid.GetGridObject(new Vector3(groundLocations[i].x * grid.GetCellSize(), 0, groundLocations[i].y * grid.GetCellSize()));
                 GameObject floorObj = null;
                 
-                switch (groundLocations[i,j].GroundType) {
+                switch (groundLocations[i].GroundType) {
                     case GroundType.Ore:
                         floorObj = Resources.Load("Building/Floor/Ore") as GameObject;
                         break;
@@ -72,9 +81,9 @@ public class GridBuildingSystem : MonoBehaviour {
                         break;
                 }
                 
-                gridObject.GroundType = groundLocations[i,j].GroundType;
-                gridObject.Ground = Instantiate(floorObj, new Vector3((i + 0.5f) * grid.GetCellSize(),0,(j + 0.5f) * grid.GetCellSize()), Quaternion.identity, this.gameObject.transform );
-            }
+                gridObject.GroundType = groundLocations[i].GroundType;
+                gridObject.Ground = GroundObject.Create(floorObj, new Vector3Int(groundLocations[i].x, 0, groundLocations[i].y), Quaternion.identity,
+                    this.gameObject.transform, groundLocations[i].GroundType);
         }
     }
     

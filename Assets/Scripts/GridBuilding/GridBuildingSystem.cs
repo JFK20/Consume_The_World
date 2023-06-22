@@ -38,8 +38,8 @@ public class GridBuildingSystem : MonoBehaviour {
     private void Awake() {
         Instance = this;
         
-        int gridwidth = 100;
-        int gridheight = 100;
+        int gridwidth = 11;
+        int gridheight = 11;
 
         int cellSize = 10;
         grid = new GridXZ<GridObject>(gridwidth, gridheight, cellSize, Vector3.zero,
@@ -49,11 +49,26 @@ public class GridBuildingSystem : MonoBehaviour {
         GenerateFloor();
     }
 
-    public void GenerateFloor() {
+    private void GenerateFloor() {
+        GroundType[,] groundLocations = new GroundType[grid.GetWidth(),grid.GetHeight()];
+        groundLocations[5, 5] = GroundType.Ore;
         for (int i = 0; i < grid.GetWidth(); i++) {
             for (int j = 0; j < grid.GetHeight(); j++) {
                 GridObject gridObject = grid.GetGridObject(new Vector3(i * grid.GetCellSize(), 0, j * grid.GetCellSize()));
-                gridObject.Ground = Instantiate(Resources.Load("Building/Floor/Grass") as GameObject, new Vector3(i * grid.GetCellSize(),0,j * grid.GetCellSize()), Quaternion.identity );
+                GameObject floorObj = null;
+                
+                switch (groundLocations[i,j]) {
+                    case GroundType.Ore:
+                        gridObject.GroundType = GroundType.Ore;
+                        floorObj = Resources.Load("Building/Floor/Ore") as GameObject;
+                        break;
+                    default:
+                        gridObject.GroundType = GroundType.Grass;
+                        floorObj = Resources.Load("Building/Floor/Grass") as GameObject;
+                        break;
+                }
+                
+                gridObject.Ground = Instantiate(floorObj, new Vector3((i + 0.5f) * grid.GetCellSize(),0,(j + 0.5f) * grid.GetCellSize()), Quaternion.identity, this.gameObject.transform );
             }
         }
     }
@@ -233,7 +248,14 @@ public class GridBuildingSystem : MonoBehaviour {
             get => ground;
             set => ground = value;
         }
-
+        
+        private GroundType groundType;
+        
+        public GroundType GroundType {
+            get => groundType;
+            set => groundType = value;
+        }
+        
         public GridObject(GridXZ<GridObject> grid, int x, int z) {
             this.grid = grid;
             this.x = x;
@@ -262,4 +284,5 @@ public class GridBuildingSystem : MonoBehaviour {
             return x + "," + z + "\n" + placedObject;
         }
     }
+    
 }

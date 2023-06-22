@@ -12,10 +12,6 @@ public class GroundObject : MonoBehaviour
 {
     [SerializeField] private GroundType groundType;
 
-    [SerializeField] private Plane plane;
-    
     public GroundType GroundType => groundType;
-
-    public Plane Plane => plane;
 
 }

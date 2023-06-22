@@ -51,13 +51,15 @@ public class SaveGameManager : MonoBehaviour {
     /// </summary>
     public void Load() {
         foreach (SaveableObject obj in SaveableObjectList) {
-            if (obj != null) {
-               PlacedObject placedObject = obj.gameObject.GetComponent<PlacedObject>();
-               List<Vector2Int> posList = placedObject.GetGridPositionList();
-               foreach (Vector2Int pos in posList) {
-                   GridBuildingSystem.Instance.grid.GetGridObject(pos.x, pos.y).ClearPlacedObject();
-               } 
-               Destroy(obj.gameObject);
+            if (obj != null) { 
+                PlacedObject placedObject = obj.gameObject.GetComponent<PlacedObject>();
+                if (placedObject != null) {
+                    List<Vector2Int> posList = placedObject.GetGridPositionList(); 
+                    foreach (Vector2Int pos in posList) {
+                        GridBuildingSystem.Instance.grid.GetGridObject(pos.x, pos.y).ClearPlacedObject(); 
+                    }
+                }
+                Destroy(obj.gameObject);
             }
         }
         

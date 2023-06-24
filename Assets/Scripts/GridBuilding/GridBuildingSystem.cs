@@ -12,18 +12,34 @@ public class GridBuildingSystem : MonoBehaviour {
     public event EventHandler OnObjectPlaced;
 
     [SerializeField] private List<PlacedObjectTypeSO> placedObjectTypeSoList;
+    public List<PlacedObjectTypeSO> GetPlacedObjectSoList => placedObjectTypeSoList;
+
     private PlacedObjectTypeSO placedObjectTypeSo;
-    
+    public PlacedObjectTypeSO PlacedObjectTypeSo {
+        get => placedObjectTypeSo;
+        set => placedObjectTypeSo = value;
+    }
+
+
     public GridXZ<GridObject> grid { get; private set; }
     private PlacedObjectTypeSO.Dir dir = PlacedObjectTypeSO.Dir.Down;
+    public PlacedObjectTypeSO.Dir Dir {
+        get => dir;
+        set => dir = value;
+    }
+    
 
     private bool InventoryOpen;
+    
+    public void GetInventory() {
+        InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
+    }
 
     private void Awake() {
         Instance = this;
         
-        int gridwidth = 10;
-        int gridheight = 10;
+        int gridwidth = 100;
+        int gridheight = 100;
 
         int cellSize = 10;
         grid = new GridXZ<GridObject>(gridwidth, gridheight, cellSize, Vector3.zero,
@@ -31,50 +47,11 @@ public class GridBuildingSystem : MonoBehaviour {
 
         placedObjectTypeSo = placedObjectTypeSoList[0];
     }
-
-    private void Update() {
-        if (Input.GetMouseButtonDown(0)) {
-            Build();
-        }
-        if (Input.GetMouseButtonDown(1)) {
-            Demolish();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha0)) {
-            DeselectObjectType();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            placedObjectTypeSo = placedObjectTypeSoList[0];
-            RefreshSelectedObjectType();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            placedObjectTypeSo = placedObjectTypeSoList[1];
-            RefreshSelectedObjectType();
-        }
-        if (Input.GetKeyDown(KeyCode.R)) {
-            dir = PlacedObjectTypeSO.GetNextDir(dir);
-        }
-        if (Input.GetKeyDown(KeyCode.S)) {
-            SaveGameManager.Instance.Save();
-            Debug.Log("Saved");
-        }
-        if (Input.GetKeyDown(KeyCode.L)) {
-            SaveGameManager.Instance.Load();
-            Debug.Log("Loaded");
-        }
-        if (Input.GetKeyDown(KeyCode.E)) {
-            getInventory();
-        }
-    }
     
-    private void getInventory() {
-        InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
-    }
-
     /// <summary>
     /// Builds the Object with the Currently Selected Prefab at the MousePosition 
     /// </summary>
-    private void Build() {
+    public void Build() {
         if (placedObjectTypeSo == null) {
             return;
         }
@@ -167,12 +144,26 @@ public class GridBuildingSystem : MonoBehaviour {
         }
     }
 
-    private void Demolish() {
+    /*
+    public void Demolish() {
         GridObject gridObject = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
         if (gridObject == null) {
             return;
         }
         PlacedObject placedObject = gridObject.GetPlacedObject();
+        if (placedObject == null) {
+            return;
+        }
+        placedObject.DestroySelf();
+        List<Vector2Int> gridPositionList = placedObject.GetGridPositionList();
+        
+        foreach (Vector2Int gridposition in gridPositionList) {
+            grid.GetGridObject(gridposition.x, gridposition.y).ClearPlacedObject();
+        }
+    }*/
+    
+    public void Demolish(PlacedObject placedObject) {
+        //gridObject.GetPlacedObject();
         if (placedObject == null) {
             return;
         }
@@ -210,11 +201,11 @@ public class GridBuildingSystem : MonoBehaviour {
         return placedObjectTypeSo;
     }
     
-    private void DeselectObjectType() {
+    public void DeselectObjectType() {
         placedObjectTypeSo = null; RefreshSelectedObjectType();
     }
 
-    private void RefreshSelectedObjectType() {
+    public void RefreshSelectedObjectType() {
         OnSelectedChanged?.Invoke(this, EventArgs.Empty);
     }
     

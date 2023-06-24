@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -39,6 +37,7 @@ public class InventoryManager : MonoBehaviour {
             currentInventory.gameObject.SetActive(false);
             isInventoryOpen = false;
             inventorySlots = null;
+            currentInventory = null;
         }
         
         
@@ -46,6 +45,9 @@ public class InventoryManager : MonoBehaviour {
 
 
     public bool AddItem(Item item, InventorySlot.IO io) {
+        if (currentInventory == null) {
+            return false;
+        }
         //finds an slot with same item
         if (item.stackable) {
             for (int i = 0; i < inventorySlots.Length; i++) {

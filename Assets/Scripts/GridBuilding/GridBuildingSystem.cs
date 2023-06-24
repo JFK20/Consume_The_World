@@ -125,9 +125,15 @@ public class GridBuildingSystem : MonoBehaviour {
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
 
-            //Debug.Log("pos x:" + x + " pos z:" + z);
-            PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo);
+            PlacedObject type = placedObjectTypeSo.prefab.GetComponent<PlacedObject>();
+            PlacedObject placedObject = null;
             
+            switch (type) {
+                case OreMiner:
+                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.Ore); break;
+                default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo); break;
+            }
+
             foreach (Vector2Int gridposition in gridPositionList) {
                 grid.GetGridObject(gridposition.x, gridposition.y).SetPlacedObject(placedObject);
             }
@@ -176,8 +182,15 @@ public class GridBuildingSystem : MonoBehaviour {
             Vector2Int rotationOffset = givenPlacedObjectTypeSo.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
-
-            PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  givenPlacedObjectTypeSo);
+            
+            PlacedObject type = placedObjectTypeSo.prefab.GetComponent<PlacedObject>();
+            PlacedObject placedObject = null;
+            
+            switch (type) {
+                case OreMiner:
+                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.Ore); break;
+                default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo); break;
+            }
             
             foreach (Vector2Int gridposition in gridPositionList) {
                 grid.GetGridObject(gridposition.x, gridposition.y).SetPlacedObject(placedObject);

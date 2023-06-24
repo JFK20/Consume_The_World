@@ -22,11 +22,11 @@ public class PlacedObject : SaveableObject  {
     }
     
     
-    private PlacedObjectTypeSO placedObjectTypeSO;
-    private Vector2Int origin;
-    private PlacedObjectTypeSO.Dir dir;
-    [SerializeField] private Canvas inventory;
-    private InventorySlot[] inventorySlots = null;
+    protected PlacedObjectTypeSO placedObjectTypeSO;
+    protected Vector2Int origin;
+    protected PlacedObjectTypeSO.Dir dir;
+    [SerializeField] protected Canvas inventory;
+    protected InventorySlot[] inventorySlots = null;
 
     public InventorySlot[] GetInventorySlots => inventorySlots;
     public Canvas GetInventory => inventory;
@@ -84,7 +84,7 @@ public class PlacedObject : SaveableObject  {
     /// cycles through all the slots and converts the Items to Strings
     /// </summary>
     /// <returns></returns>
-    private string SaveItems() {
+    protected string SaveItems() {
         string data = "";
         for (int i = 0; i < inventorySlots.Length; i++) {
             InventoryItem toSave = inventorySlots[i].GetComponentInChildren<InventoryItem>(includeInactive: true);
@@ -97,7 +97,7 @@ public class PlacedObject : SaveableObject  {
         return data;
     }
 
-    private Item StringToItem(string item) {
+    protected Item StringToItem(string item) {
         switch (item) {
                 case "Test": return Resources.Load("Inventory/So/Test") as Item;
                 default: return Resources.Load("Inventory/So/Test") as Item;

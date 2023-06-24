@@ -27,6 +27,7 @@ public class PlacedObjectTypeSO : ScriptableObject {
     public Transform visual;
     public int width;
     public int height;
+    public Building building;
 
 
     public int GetRotationAngle(Dir dir) {
@@ -82,6 +83,11 @@ public class PlacedObjectTypeSO : ScriptableObject {
                 break;
         }
         return gridPositionList;
+    }
+    
+    public enum Building {
+        Lincoln,
+        WhiteHouse,
     }
 
 }

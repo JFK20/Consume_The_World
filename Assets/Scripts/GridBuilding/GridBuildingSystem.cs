@@ -111,6 +111,10 @@ public class GridBuildingSystem : MonoBehaviour {
                 freeSlot = false;
                 break;
             }
+
+            /*switch (onPositionObject.GroundType) {
+                case GroundType.Ore:
+            }*/
         }
 
         //GridObject gridObject = grid.GetGridObject(x, z);

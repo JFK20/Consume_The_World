@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum Building {
-    Lincoln,
-    WhiteHouse,
-}
+
 
 public class PlacedObject : SaveableObject  {
 
@@ -28,7 +25,6 @@ public class PlacedObject : SaveableObject  {
     private PlacedObjectTypeSO placedObjectTypeSO;
     private Vector2Int origin;
     private PlacedObjectTypeSO.Dir dir;
-    [SerializeField] private Building building;
     [SerializeField] private Canvas inventory;
     private InventorySlot[] inventorySlots = null;
 
@@ -80,7 +76,7 @@ public class PlacedObject : SaveableObject  {
     public override string Save(int id) {
         string items = SaveItems();
         string pos = origin.ToString();
-        string data = getObjectType().ToString() + "_" + building.ToString() + "_" + pos + "_" + dir.ToString() + "_" + items;
+        string data = getObjectType().ToString() + "_" + placedObjectTypeSO.building.ToString() + "_" + pos + "_" + dir.ToString() + "_" + items;
         return data;
     }
 

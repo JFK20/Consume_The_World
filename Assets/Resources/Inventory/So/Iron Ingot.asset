@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 844b9960930947c48b0037a5896d5c96, type: 3}
-  m_Name: Test
+  m_Name: Iron Ingot
   m_EditorClassIdentifier: 
-  type: 3
+  type: 2
   stackable: 1
-  image: {fileID: 21300000, guid: 9052a1b08d19abd4d89697d3d14d397f, type: 3}
-  id: 0
+  image: {fileID: 21300000, guid: 5cf3d1050a2dc2f40a6f62c437debedc, type: 3}
+  id: 2

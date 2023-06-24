@@ -9,10 +9,10 @@ public class OreMiner : PlacedObject {
     private bool mining = false;
     public static PlacedObject Create(Vector3 WorldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir,
         PlacedObjectTypeSO placedObjectTypeSO, GroundType groundType) {
-        PlacedObject test = PlacedObject.Create(WorldPosition, origin, dir, placedObjectTypeSO);
-        OreMiner oreMiner = test.GetComponent<OreMiner>();
+        PlacedObject tmp = PlacedObject.Create(WorldPosition, origin, dir, placedObjectTypeSO);
+        OreMiner oreMiner = tmp.GetComponent<OreMiner>();
         oreMiner.groundType = groundType;
-        return test;
+        return tmp;
     }
 
     public void Update() {
@@ -25,7 +25,7 @@ public class OreMiner : PlacedObject {
 
     IEnumerator MineOre(int time) {
         Item item = itemsToMine[0];
-        bool suc = AddItem(item, InventorySlot.IO.PrimaryOutput);
+        bool suc = AddItem(1, InventorySlot.IO.PrimaryOutput);
         yield return new WaitForSeconds(time);
         mining = false;
         yield return suc;

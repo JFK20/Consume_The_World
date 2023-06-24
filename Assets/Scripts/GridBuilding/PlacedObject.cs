@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 
-public class PlacedObject : SaveableObject  {
+public class PlacedObject : SaveableObject {
 
     public static PlacedObject Create(Vector3 WorldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir,
         PlacedObjectTypeSO placedObjectTypeSO) {
@@ -103,20 +103,20 @@ public class PlacedObject : SaveableObject  {
                 default: return Resources.Load("Inventory/So/Test") as Item;
         }
     }
-
-    protected bool AddItem(Item item, InventorySlot.IO io) {
+    
+    protected bool AddItem(int id ,InventorySlot.IO io) {
         if (inventorySlots.Length <= 0) {
             Debug.Log("no Slots");
             return false;
         }
 
         //finds an slot with same item
-        if (item.stackable) {
+        if (ItemList.Instance.itemList[id].stackable) {
             for (int i = 0; i < inventorySlots.Length; i++) {
                 InventorySlot slot = inventorySlots[i];
                 if (slot.io == io) {
                     InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
-                    if (itemInSlot != null && itemInSlot.item.getId == item.getId &&
+                    if (itemInSlot != null && itemInSlot.item.getId == id &&
                         itemInSlot.count < InventoryManager.Instance.maxStackedItem) {
                         itemInSlot.count++;
                         itemInSlot.RefreshCount();
@@ -131,7 +131,7 @@ public class PlacedObject : SaveableObject  {
             if (slot.io == io) { 
                 InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
                 if (itemInSlot == null) {
-                    SpawnNewItem(item, slot);
+                    SpawnNewItem(id, slot);
                     return true;
                 }
             }
@@ -139,9 +139,74 @@ public class PlacedObject : SaveableObject  {
         return false;
     }
     
-    private void SpawnNewItem(Item item, InventorySlot slot) {
+    private void SpawnNewItem(int id, InventorySlot slot) {
         GameObject newItemGo = Instantiate(InventoryManager.Instance.inventoryItemPrefab, slot.transform);
         InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
-        inventoryItem.InitialiseItem(item);
+        inventoryItem.InitialiseItem(ItemList.Instance.itemList[id]);
     }
+
+    protected virtual IEnumerator ProcessItem(Item inputItem, InventorySlot.IO inputIO, int outputItem, InventorySlot.IO outputIO,int time) {
+        return null;
+    }
+
+    protected bool RemoveItem(Item itemToRemove, InventorySlot.IO io) {
+        if (inventorySlots.Length <= 0) {
+            Debug.Log("no Slots");
+            return false;
+        }
+        
+        for (int i = 0; i < inventorySlots.Length; i++) {
+            InventorySlot slot = inventorySlots[i];
+            if (slot.io == io) {
+                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
+                if (itemInSlot != null && itemInSlot.item.getId == itemToRemove.getId &&
+                    itemInSlot.count > 0) {
+                    itemInSlot.count--;
+                    if (itemInSlot.count > 0) {
+                        itemInSlot.RefreshCount();
+                    }
+                    else {
+                        Destroy(itemInSlot.gameObject);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected bool FreeSlot(Item item, InventorySlot.IO io) {
+        if (inventorySlots.Length <= 0) {
+            Debug.Log("no Slots");
+            return false;
+        }
+
+        for (int i = 0; i < inventorySlots.Length; i++) {
+            InventorySlot slot = inventorySlots[i];
+            if (slot.io == io) {
+                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
+                if (itemInSlot == null || (itemInSlot.item.getId == item.getId &&
+                                           itemInSlot.count < InventoryManager.Instance.maxStackedItem)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    protected Item FindItem(int id, InventorySlot.IO io) {
+        Item itemToFind = ItemList.Instance.itemList[id];
+        for (int i = 0; i < inventorySlots.Length; i++) {
+            InventorySlot slot = inventorySlots[i]; 
+            if (slot.io == io) {
+                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
+                if (itemInSlot != null && itemInSlot.item.getId == id &&
+                    itemInSlot.count > 0) {
+                    return itemInSlot.item;
+                }
+            }
+        }
+        return null;
+    }
+    
 }

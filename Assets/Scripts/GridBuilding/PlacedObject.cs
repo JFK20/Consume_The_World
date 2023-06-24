@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 
 
-public class PlacedObject : SaveableObject {
+public abstract class PlacedObject : SaveableObject {
 
     public static PlacedObject Create(Vector3 WorldPosition, Vector2Int origin, PlacedObjectTypeSO.Dir dir,
         PlacedObjectTypeSO placedObjectTypeSO) {
@@ -103,6 +103,8 @@ public class PlacedObject : SaveableObject {
                 default: return Resources.Load("Inventory/So/Test") as Item;
         }
     }
+
+    #region Items & Inventorys
     
     protected bool AddItem(int id ,InventorySlot.IO io) {
         if (inventorySlots.Length <= 0) {
@@ -208,5 +210,7 @@ public class PlacedObject : SaveableObject {
         }
         return null;
     }
+    
+    #endregion
     
 }

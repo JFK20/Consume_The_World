@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum GroundType {
     Standard,
-    Ore,
+    TestOre,
     Grass
 }
 

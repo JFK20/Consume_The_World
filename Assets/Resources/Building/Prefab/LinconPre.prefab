@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectType: 0
   inventory: {fileID: 8890094225485145822}
+  itemsToMine:
+  - {fileID: 11400000, guid: 792d6306be78c5242a3a1d57de4041cc, type: 2}
 --- !u!1 &4544625167459370828
 GameObject:
   m_ObjectHideFlags: 0

@@ -186,7 +186,7 @@ public class SaveGameManager : MonoBehaviour {
 
     public GroundType StringToGroundType(string type) {
         switch (type) {
-            case "Ore": return GroundType.Ore;
+            case "Ore": return GroundType.TestOre;
             case "Grass": return GroundType.Grass;
             default: return GroundType.Standard;
         }

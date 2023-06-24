@@ -58,7 +58,7 @@ public class GridBuildingSystem : MonoBehaviour {
         }
         
         //groundLocations[65].GroundType = GroundType.Ore;
-        groundLocations[60].GroundType = GroundType.Ore; //Middle
+        groundLocations[60].GroundType = GroundType.TestOre; //Middle
         return groundLocations;
     }
     
@@ -70,7 +70,7 @@ public class GridBuildingSystem : MonoBehaviour {
                 GameObject floorObj = null;
                 
                 switch (groundLocations[i].GroundType) {
-                    case GroundType.Ore:
+                    case GroundType.TestOre:
                         floorObj = Resources.Load("Building/Floor/Ore") as GameObject;
                         break;
                     default:
@@ -130,7 +130,7 @@ public class GridBuildingSystem : MonoBehaviour {
             
             switch (type) {
                 case OreMiner:
-                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.Ore); break;
+                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.TestOre); break;
                 default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo); break;
             }
 
@@ -188,7 +188,7 @@ public class GridBuildingSystem : MonoBehaviour {
             
             switch (type) {
                 case OreMiner:
-                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.Ore); break;
+                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.TestOre); break;
                 default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo); break;
             }
             

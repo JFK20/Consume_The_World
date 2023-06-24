@@ -21,7 +21,7 @@ public class InventoryManager : MonoBehaviour {
             return instance;
         }
     }
-
+    
     public void OpenInventory(GridBuildingSystem.GridObject gridObject) {
         if (!isInventoryOpen) {
             PlacedObject placedObject = gridObject.GetPlacedObject();
@@ -78,7 +78,7 @@ public class InventoryManager : MonoBehaviour {
         return false;
     }
 
-    private void SpawnNewItem(Item item, InventorySlot slot) {
+    public void SpawnNewItem(Item item, InventorySlot slot) {
         GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform);
         InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
         inventoryItem.InitialiseItem(item);

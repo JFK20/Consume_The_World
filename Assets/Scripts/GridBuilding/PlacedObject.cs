@@ -103,4 +103,45 @@ public class PlacedObject : SaveableObject  {
                 default: return Resources.Load("Inventory/So/Test") as Item;
         }
     }
+
+    protected bool AddItem(Item item, InventorySlot.IO io) {
+        if (inventorySlots.Length <= 0) {
+            Debug.Log("no Slots");
+            return false;
+        }
+
+        //finds an slot with same item
+        if (item.stackable) {
+            for (int i = 0; i < inventorySlots.Length; i++) {
+                InventorySlot slot = inventorySlots[i];
+                if (slot.io == io) {
+                    InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
+                    if (itemInSlot != null && itemInSlot.item.getId == item.getId &&
+                        itemInSlot.count < InventoryManager.Instance.maxStackedItem) {
+                        itemInSlot.count++;
+                        itemInSlot.RefreshCount();
+                        return true;
+                    }
+                }
+            }
+        }
+        //finds an empty slot
+        for (int i = 0; i < inventorySlots.Length; i++) {
+            InventorySlot slot = inventorySlots[i];
+            if (slot.io == io) { 
+                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
+                if (itemInSlot == null) {
+                    SpawnNewItem(item, slot);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private void SpawnNewItem(Item item, InventorySlot slot) {
+        GameObject newItemGo = Instantiate(InventoryManager.Instance.inventoryItemPrefab, slot.transform);
+        InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
+        inventoryItem.InitialiseItem(item);
+    }
 }

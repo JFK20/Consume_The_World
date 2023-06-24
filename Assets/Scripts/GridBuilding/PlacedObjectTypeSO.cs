@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +29,7 @@ public class PlacedObjectTypeSO : ScriptableObject {
     public int width;
     public int height;
     public Building building;
+    public GroundType[] suitableGrounds;
 
 
     public int GetRotationAngle(Dir dir) {
@@ -89,5 +91,15 @@ public class PlacedObjectTypeSO : ScriptableObject {
         Lincoln,
         WhiteHouse,
     }
+
+    /*public static GroundType[] AcceptedGrounds(Building building) {
+        GroundType[] lincolnArray = new[] { GroundType.Ore };
+        GroundType[] WhiteHouseArray = new[] { GroundType.Grass };
+        switch (building) {
+            case Building.Lincoln: return lincolnArray;
+            case Building.WhiteHouse: return WhiteHouseArray;
+            default: return Array.Empty<GroundType>();
+        }
+    }*/
 
 }

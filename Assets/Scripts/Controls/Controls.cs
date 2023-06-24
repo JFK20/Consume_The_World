@@ -33,11 +33,11 @@ public class Controls : MonoBehaviour {
                 gridBuildingSystem.DeselectObjectType();
             }
             if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                gridBuildingSystem.PlacedObjectTypeSo = gridBuildingSystem.GetPlacedObjectSoList[0]; // getter
+                gridBuildingSystem.placedObjectTypeSo = gridBuildingSystem.GetPlacedObjectSoList[0]; // getter
                 gridBuildingSystem.RefreshSelectedObjectType();
             }
             if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                gridBuildingSystem.PlacedObjectTypeSo = gridBuildingSystem.GetPlacedObjectSoList[1];
+                gridBuildingSystem.placedObjectTypeSo = gridBuildingSystem.GetPlacedObjectSoList[1];
                 gridBuildingSystem.RefreshSelectedObjectType();
             }
             if (Input.GetKeyDown(rotation)) {

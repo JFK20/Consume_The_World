@@ -17,3 +17,5 @@ MonoBehaviour:
   visual: {fileID: 782702443877573796, guid: 49b0cda4f0cad414293e9ad128f66665, type: 3}
   width: 1
   height: 1
+  building: 0
+  suitableGrounds: 01000000

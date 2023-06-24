@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using CodeMonkey.Utils;
 
@@ -14,11 +15,7 @@ public class GridBuildingSystem : MonoBehaviour {
     [SerializeField] private List<PlacedObjectTypeSO> placedObjectTypeSoList;
     public List<PlacedObjectTypeSO> GetPlacedObjectSoList => placedObjectTypeSoList;
 
-    private PlacedObjectTypeSO placedObjectTypeSo;
-    public PlacedObjectTypeSO PlacedObjectTypeSo {
-        get => placedObjectTypeSo;
-        set => placedObjectTypeSo = value;
-    }
+    public PlacedObjectTypeSO placedObjectTypeSo { get; set; }
 
 
     public GridXZ<GridObject> grid { get; private set; }
@@ -100,7 +97,9 @@ public class GridBuildingSystem : MonoBehaviour {
         List<Vector2Int> gridPositionList = placedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
 
         bool freeSlot = true;
+        bool acceptedGround = true;
         GridObject onPositionObject = null;
+        GroundType[] grounds = placedObjectTypeSo.suitableGrounds;
         foreach (Vector2Int gridposition in gridPositionList) {
             onPositionObject = grid.GetGridObject(gridposition.x,gridposition.y);
             if (onPositionObject == null) {
@@ -112,13 +111,16 @@ public class GridBuildingSystem : MonoBehaviour {
                 break;
             }
 
-            /*switch (onPositionObject.GroundType) {
-                case GroundType.Ore:
-            }*/
+            if (!grounds.Contains(onPositionObject.GroundType)) {
+                acceptedGround = false;
+                break;
+            }
+            // Check if Ground is Suitable
+
         }
 
         //GridObject gridObject = grid.GetGridObject(x, z);
-        if (freeSlot) {
+        if (freeSlot && acceptedGround) {
             Vector2Int rotationOffset = placedObjectTypeSo.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
@@ -131,9 +133,11 @@ public class GridBuildingSystem : MonoBehaviour {
             }
             OnObjectPlaced?.Invoke(this, EventArgs.Empty);
         }
-        else {
+        else if (!freeSlot) {
             Debug.Log("Already Occupied");
-            
+        }
+        else if(!acceptedGround) {
+            Debug.Log("Wrong Ground");
         }
     }
 

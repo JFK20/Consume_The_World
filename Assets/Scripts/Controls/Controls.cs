@@ -27,7 +27,7 @@ public class Controls : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (!inInventory || !inPlayerInventory) {
+        if (!inInventory && !inPlayerInventory) {
             if (Input.GetKeyDown(buildMode)) {
                 inBuildMode = !inBuildMode;
                 buildPreview.gameObject .SetActive(inBuildMode);
@@ -62,9 +62,9 @@ public class Controls : MonoBehaviour {
             }
             CameraControl.Instance.UpdateCamera();
         }
-        else {
+        else if (inPlayerInventory || inInventory) {
             inBuildMode = false;
-            buildPreview.gameObject .SetActive(false);
+            buildPreview.gameObject.SetActive(false);
         }
         if (Input.GetKeyDown(openInventory)) {
             gridBuildingSystem.GetInventory();

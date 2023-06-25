@@ -50,7 +50,7 @@ public class InventoryDrag : MonoBehaviour, IDragHandler, IBeginDragHandler, IEn
     /// <param name="eventData"></param>
     public void OnEndDrag(PointerEventData eventData)
     {
-        //Debug.Log("End Drag");
+        //sdDebug.Log("End Drag");
         //Implement further funtionlity here
     }
  

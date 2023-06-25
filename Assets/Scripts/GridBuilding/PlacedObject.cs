@@ -195,20 +195,27 @@ public abstract class PlacedObject : SaveableObject {
         }
         return false;
     }
+    protected bool FreeSlot(int itemId, InventorySlot.IO io) {
+        Item item = ItemList.Instance.itemList[itemId];
+        return FreeSlot(item, io);
+    }
 
-    protected Item FindItem(int id, InventorySlot.IO io) {
-        Item itemToFind = ItemList.Instance.itemList[id];
+    protected Item FindItem(Item item, InventorySlot.IO io) {
         for (int i = 0; i < inventorySlots.Length; i++) {
             InventorySlot slot = inventorySlots[i]; 
             if (slot.io == io) {
                 InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
-                if (itemInSlot != null && itemInSlot.item.getId == id &&
+                if (itemInSlot != null && itemInSlot.item.getId == item.getId &&
                     itemInSlot.count > 0) {
                     return itemInSlot.item;
                 }
             }
         }
         return null;
+    }
+    protected Item FindItem(int id, InventorySlot.IO io) {
+        Item itemToFind = ItemList.Instance.itemList[id];
+        return FindItem(itemToFind, io);
     }
     
     #endregion

@@ -12,7 +12,12 @@ public class Controls : MonoBehaviour {
     [SerializeField] private KeyCode openInventory;
     [SerializeField] private KeyCode quickSave;
     [SerializeField] private KeyCode quickLoad;
+    [SerializeField] private KeyCode buildMode;
+    [SerializeField] private KeyCode openPlayerInventory;
+    [SerializeField] private GameObject buildPreview;
     public bool inInventory;
+    private bool inBuildMode;
+    private bool inPlayerInventory;
 
 
     public void Awake() {
@@ -22,8 +27,12 @@ public class Controls : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (!inInventory) {
-            if (Input.GetMouseButtonDown(0)) {
+        if (!inInventory || !inPlayerInventory) {
+            if (Input.GetKeyDown(buildMode)) {
+                inBuildMode = !inBuildMode;
+                buildPreview.gameObject .SetActive(inBuildMode);
+            }
+            if (Input.GetMouseButtonDown(0) && inBuildMode) {
                 gridBuildingSystem.Build();
             }
             /*if (Input.GetMouseButtonDown(1)) {
@@ -53,9 +62,17 @@ public class Controls : MonoBehaviour {
             }
             CameraControl.Instance.UpdateCamera();
         }
+        else {
+            inBuildMode = false;
+            buildPreview.gameObject .SetActive(false);
+        }
         if (Input.GetKeyDown(openInventory)) {
             gridBuildingSystem.GetInventory();
             inInventory = !inInventory;
+        }
+        if (Input.GetKeyDown(openPlayerInventory)) {
+            InventoryManager.Instance.OpenPlayerInventory();
+            inPlayerInventory = !inPlayerInventory;
         }
     }
 }

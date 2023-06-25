@@ -11,6 +11,11 @@ public class InventoryManager : MonoBehaviour {
     private Canvas currentInventory;
     private bool isInventoryOpen;
 
+    [SerializeField] private GameObject playerInventory;
+    [SerializeField] private Canvas playerCanvas;
+    [SerializeField] private InventorySlot[] playerInventorySlots;
+    private bool inPlayerInventory;
+
     private static InventoryManager instance;
 
     public static InventoryManager Instance {
@@ -21,26 +26,24 @@ public class InventoryManager : MonoBehaviour {
             return instance;
         }
     }
-    
+
     public void OpenInventory(GridBuildingSystem.GridObject gridObject) {
         if (!isInventoryOpen) {
-            PlacedObject placedObject = gridObject.GetPlacedObject();
-            if (placedObject == null) {
-                return;
-            }
-            currentInventory = placedObject.GetInventory;
-            currentInventory.gameObject.SetActive(true);
-            isInventoryOpen = true;
-            inventorySlots = placedObject.GetInventorySlots;
+                PlacedObject placedObject = gridObject.GetPlacedObject();
+                if (placedObject == null) {
+                    return;
+                }
+                currentInventory = placedObject.GetInventory;
+                currentInventory.gameObject.SetActive(true);
+                isInventoryOpen = true;
+                inventorySlots = placedObject.GetInventorySlots;
         }
         else if(isInventoryOpen) {
-            currentInventory.gameObject.SetActive(false);
+            inventorySlots = Array.Empty<InventorySlot>();
+            currentInventory.gameObject.SetActive(false); 
+            currentInventory = null; 
             isInventoryOpen = false;
-            inventorySlots = null;
-            currentInventory = null;
         }
-        
-        
     }
 
 
@@ -82,6 +85,11 @@ public class InventoryManager : MonoBehaviour {
         GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform);
         InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
         inventoryItem.InitialiseItem(item);
+    }
+
+    public void OpenPlayerInventory() {
+        inPlayerInventory = !inPlayerInventory;
+        playerInventory.SetActive(inPlayerInventory);
     }
 
 }

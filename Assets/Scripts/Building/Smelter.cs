@@ -21,7 +21,7 @@ public class Smelter : PlacedObject
                 smelting = true;
             }
             else {
-                Wait(3);
+                StartCoroutine(Wait(3));
             }
             
         }

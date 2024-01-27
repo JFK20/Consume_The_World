@@ -1,0 +1,40 @@
+@startuml
+
+class DemoScript {
+    -InventoryManager inventoryManager
+    -Item[] itemsToPickup
+    +void PickupItem(int id)
+    +void Update()
+}
+
+class Inventory {
+    -InventorySlot[] slots
+    +void AddItem(Item item)
+    +void RemoveItem(Item item)
+}
+
+class Item {
+    -string name
+    -int id
+    +void Use()
+}
+
+class InventoryManager {
+    -Inventory inventory
+    +void AddItem(Item item)
+    +void RemoveItem(Item item)
+}
+
+class InventorySlot {
+    -Item item
+    +void AddItem(Item item)
+    +void RemoveItem()
+}
+
+DemoScript --> InventoryManager : uses
+InventoryManager --> Inventory : uses
+Inventory --> InventorySlot : contains
+InventorySlot --> Item : contains
+InventoryManager --> Item : uses
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+
+class BuildingGhost {
+-PlacedObjectTypeSO placedObjectTypeSo
+    -Transform ghostTransform
+    +void SetGhost(PlacedObjectTypeSO placedObjectTypeSo)
++void ClearGhost()
+}
+
+class GridBuilding {
+-int width
+    -int height
+    -GridXY<PlacedObject> grid
+    +void Build()
++void Demolish()
++void DeselectObjectType()
++void RefreshSelectedObjectType()
++void GetInventory()
+}
+
+class GridXY<T> {
+-int width
+    -int height
+    -T[,] gridArray
+    +void SetValue(int x, int y, T value)
++T GetValue(int x, int y)
+}
+
+class PlacedObject {
+-PlacedObjectTypeSO placedObjectTypeSo
+    -Vector2Int origin
+    -Direction dir
+    +void DestroySelf()
+}
+
+class PlacedObjectTypeSO {
+-string nameString
+    -Sprite sprite
+    -Direction dir
+    +static Direction GetNextDir(Direction dir)
+}
+
+BuildingGhost --> PlacedObjectTypeSO : uses
+GridBuilding --> GridXY : uses
+GridBuilding --> PlacedObject : uses
+GridXY --> PlacedObject : contains
+PlacedObject --> PlacedObjectTypeSO : uses
+
+@enduml

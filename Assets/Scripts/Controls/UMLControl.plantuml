@@ -1,0 +1,40 @@
+@startuml
+
+class CameraControl {
+    -CinemachineVirtualCamera cinemachineVirtualCamera
+    -bool useEdgeScrolling
+    -bool useDragPen
+    -float moveSpeed
+    -bool dragPanMoveActive
+    -Vector2 lastMousePosition
+    -Vector3 followOffset
+    +static CameraControl Instance
+    +void UpdateCamera()
+    -void HandleCameraMovement()
+    -void HandleCameraRotation()
+    -void HandleCameraMovementEdgeScrolling()
+    -void HandleCameraMovementDragPen()
+    -void HandleCameraZoom()
+}
+
+class Controls {
+    -GridBuildingSystem gridBuildingSystem
+    -KeyCode rotation
+    -KeyCode openInventory
+    -KeyCode quickSave
+    -KeyCode quickLoad
+    -bool inInventory
+    +void Update()
+}
+
+class Mouse3D {
+    +static Mouse3D Instance
+    -LayerMask mouseColliderLayerMask
+    +Vector3 GetMouseWorldPosition()
+    -Vector3 GetMouseWorldPosition_Instance()
+}
+
+Controls --> CameraControl : uses
+Mouse3D --> CameraControl : uses
+
+@enduml

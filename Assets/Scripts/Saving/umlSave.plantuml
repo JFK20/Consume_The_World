@@ -1,0 +1,23 @@
+@startuml
+
+class SaveableObject {
+    -string uniqueIdentifier
+    +void Save()
+    +void Load()
+}
+
+class SaveGameManager {
+    -List<SaveableObject> saveableObjects
+    +void SaveAll()
+    +void LoadAll()
+}
+
+class SaveSystem {
+    +static void Save(SaveableObject saveableObject)
+    +static void Load(SaveableObject saveableObject)
+}
+
+SaveGameManager --> SaveableObject : manages
+SaveSystem --> SaveableObject : saves/loads
+
+@enduml

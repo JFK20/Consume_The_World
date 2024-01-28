@@ -39,10 +39,10 @@ public class InventoryManager : MonoBehaviour {
                 inventorySlots = placedObject.GetInventorySlots;
         }
         else if(isInventoryOpen) {
-            inventorySlots = Array.Empty<InventorySlot>();
-            currentInventory.gameObject.SetActive(false); 
-            currentInventory = null; 
+            if (currentInventory) { currentInventory.gameObject.SetActive(false); }
             isInventoryOpen = false;
+            currentInventory = null;
+            inventorySlots = Array.Empty<InventorySlot>();
         }
     }
 

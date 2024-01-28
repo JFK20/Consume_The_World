@@ -120,7 +120,8 @@ public class SaveGameManager : MonoBehaviour {
                 tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/LinconSo") as PlacedObjectTypeSO, pos.x, pos.y, rot);
                 break;
             case "WhiteHouse":
-                tmp = GridBuildingSystem.Instance.Build(Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO, pos.x, pos.y, rot);
+                PlacedObjectTypeSO debugObj  = Resources.Load("Building/SO/WhiteHouse") as PlacedObjectTypeSO;
+                tmp = GridBuildingSystem.Instance.Build(debugObj, pos.x, pos.y, rot);
                 break;
         }
 

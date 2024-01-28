@@ -183,13 +183,15 @@ public class GridBuildingSystem : MonoBehaviour {
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
             
-            PlacedObject type = placedObjectTypeSo.prefab.GetComponent<PlacedObject>();
+            //PlacedObject type = givenPlacedObjectTypeSo.prefab.GetComponent<PlacedObject>();
             PlacedObject placedObject = null;
             
-            switch (type) {
-                case OreMiner:
-                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.TestOre); break;
-                default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo); break;
+            switch (givenPlacedObjectTypeSo.nameString) {
+                case "Lincoln":
+                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, givenPlacedObjectTypeSo, GroundType.TestOre); break;
+                case "WhiteHouse":
+                    placedObject = Smelter.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, givenPlacedObjectTypeSo); break;
+                default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  givenPlacedObjectTypeSo); break;
             }
             
             foreach (Vector2Int gridposition in gridPositionList) {

@@ -65,7 +65,8 @@ public abstract class PlacedObject : SaveableObject {
                 //Debug.Log(data[0] + "," + data[1] + "," + data[2]);
                 int count = int.Parse(data[2]);
                 int slotNumber = int.Parse(data[0]);
-                GameObject newItemGo = Instantiate(InventoryManager.Instance.inventoryItemPrefab, inventorySlots[slotNumber].transform);
+                GameObject Debugobj = InventoryManager.Instance.inventoryItemPrefab;
+                GameObject newItemGo = Instantiate(Debugobj, inventorySlots[slotNumber].transform);
                 InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
                 inventoryItem.InitialiseItem(StringToItem(data[1]), count);
             }
@@ -100,6 +101,8 @@ public abstract class PlacedObject : SaveableObject {
     protected Item StringToItem(string item) {
         switch (item) {
                 case "Test": return Resources.Load("Inventory/So/Test") as Item;
+                case "IronOre": return Resources.Load("Inventory/So/Iron Ore") as Item;
+                case "IronIngot": return Resources.Load("Inventory/So/Iron Ingot") as Item;
                 default: return Resources.Load("Inventory/So/Test") as Item;
         }
     }

@@ -69,8 +69,9 @@ public class Controls : MonoBehaviour {
             buildPreview.gameObject.SetActive(false);
         }
         if (Input.GetKeyDown(openInventory)) {
-            gridBuildingSystem.GetInventory();
-            inInventory = !inInventory;
+            if(gridBuildingSystem.GetInventory()) {
+                inInventory = !inInventory;
+            }
         }
         if (Input.GetKeyDown(openPlayerInventory)) {
             InventoryManager.Instance.OpenPlayerInventory();

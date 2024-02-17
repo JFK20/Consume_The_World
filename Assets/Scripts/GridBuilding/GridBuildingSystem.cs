@@ -29,8 +29,14 @@ public class GridBuildingSystem : MonoBehaviour {
 
     public GroundStruct[] GroundObjects;
     
-    public void GetInventory() {
-        InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
+    public bool GetInventory()
+    {
+        GridObject go = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
+        if (go.GetPlacedObject() == null) {
+            return false;
+        }
+        InventoryManager.Instance.OpenInventory(go);
+        return true;
     }
 
     private void Awake() {

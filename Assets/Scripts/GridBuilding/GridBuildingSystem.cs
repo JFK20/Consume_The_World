@@ -33,6 +33,7 @@ public class GridBuildingSystem : MonoBehaviour {
     {
         GridObject go = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
         if (go.GetPlacedObject() == null) {
+            InventoryManager.Instance.OpenInventory(go);
             return false;
         }
         InventoryManager.Instance.OpenInventory(go);

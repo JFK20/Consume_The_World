@@ -30,15 +30,6 @@ public class GridBuildingSystem : MonoBehaviour {
     public GroundStruct[] GroundObjects;
     
     public void GetInventory() {
-        if (InventoryManager.Instance)
-        {
-            Debug.Log("Inventory manager exestiert");
-        }
-
-        if (grid != null)
-        {
-            Debug.Log("grid exestiert");
-        }
         InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
     }
 

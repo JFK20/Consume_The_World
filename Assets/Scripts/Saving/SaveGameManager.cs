@@ -76,7 +76,7 @@ public class SaveGameManager : MonoBehaviour {
             row[i] = row[i].Trim();
         }
         int objectCount = int.Parse(row[0].Trim());
-        Vector2Int gridSize = StringToIntVector2(row[1].Trim());
+        Vector2Int gridSize = SaveHelper.StringToIntVector2(row[1].Trim());
         //Debug.Log(row[0] + "\n" + row[1]);
 
         GroundStruct[] groundStructs = new GroundStruct[gridSize.x * gridSize.y];
@@ -102,8 +102,8 @@ public class SaveGameManager : MonoBehaviour {
     private GroundStruct LoadGroundObject(string[] value) {
         //Value 1 Grass,Ore etc
         //Value 2 Position
-        Vector2Int pos = StringToIntVector2(value[2].Trim());
-        GroundType type = StringToGroundType(value[1].Trim());
+        Vector2Int pos = SaveHelper.StringToIntVector2(value[2].Trim());
+        GroundType type = SaveHelper.StringToGroundType(value[1].Trim());
         return new GroundStruct(type, pos.x, pos.y);
     }
     
@@ -111,9 +111,9 @@ public class SaveGameManager : MonoBehaviour {
         //Value 2 Position
         //Value 3 Dir
         //Value 4 Items
-        Vector2Int pos = StringToIntVector2(value[2]);
+        Vector2Int pos = SaveHelper.StringToIntVector2(value[2]);
 
-        PlacedObjectTypeSO.Dir rot = StringToDir(value[3]);
+        PlacedObjectTypeSO.Dir rot = SaveHelper.StringToDir(value[3]);
 
         PlacedObject tmp = null;
             
@@ -130,68 +130,6 @@ public class SaveGameManager : MonoBehaviour {
         if (tmp != null) {
             // Implement Later for Inventory
             tmp.Load(value[4]);
-        }
-    }
-    
-    public Vector3Int StringToIntVector3(string value) {
-        value = value.Trim(new char[] {'(', ')'});
-        value = value.Replace(" ", "");
-        string[] pos = value.Split(",");
-        int[] intpos = new int[3];
-        for (int i = 0; i < 3; i++) {
-            float tmp =  float.Parse(pos[i], CultureInfo.InvariantCulture);
-            intpos[i] = Mathf.RoundToInt(tmp);
-        }
-        return new Vector3Int(intpos[0],intpos[1],intpos[2]);
-    }
-    
-    /// <summary>
-    /// Converts an String to an Vector2Int <br/>
-    /// Can Convert if String Contains Data as Ints
-    /// </summary>
-    /// <param name="value"> String </param>
-    /// <returns>
-    ///  Vector2Int
-    /// </returns>
-    public Vector2Int StringToIntVector2(string value) {
-        value = value.Trim(new char[] {'(', ')'});
-        value = value.Replace(" ", "");
-        string[] pos = value.Split(",");
-        int[] intpos = new int[2];
-        for (int i = 0; i < 2; i++) {
-            intpos[i] = int.Parse(pos[i], CultureInfo.InvariantCulture);
-        }
-        return new Vector2Int(intpos[0],intpos[1]);
-    }
-
-    public Quaternion StringToQuaternion(string value) {
-        value = value.Trim(new char[] {'(', ')'});
-        value = value.Replace(" ", "");
-        string[] pos = value.Split(",");
-        
-        return new Quaternion(float.Parse(pos[0], CultureInfo.InvariantCulture),float.Parse(pos[1], CultureInfo.InvariantCulture),float.Parse(pos[2], CultureInfo.InvariantCulture),float.Parse(pos[3], CultureInfo.InvariantCulture));
-    }
-    
-    /// <summary>
-    ///  Converts a String to a Dir
-    /// </summary>
-    /// <param name="rot"> string </param>
-    /// <returns> Dir </returns>
-    public PlacedObjectTypeSO.Dir StringToDir(string rot) {
-        switch (rot) {
-            case "Down": return PlacedObjectTypeSO.Dir.Down;
-            case "Up": return PlacedObjectTypeSO.Dir.Up;
-            case "Left": return PlacedObjectTypeSO.Dir.Left;
-            case "Right": return PlacedObjectTypeSO.Dir.Right;
-            default: return PlacedObjectTypeSO.Dir.Down;
-        }
-    }
-
-    public GroundType StringToGroundType(string type) {
-        switch (type) {
-            case "Ore": return GroundType.TestOre;
-            case "Grass": return GroundType.Grass;
-            default: return GroundType.Standard;
         }
     }
 

@@ -68,43 +68,17 @@ public abstract class PlacedObject : SaveableObject {
                 GameObject Debugobj = InventoryManager.Instance.inventoryItemPrefab;
                 GameObject newItemGo = Instantiate(Debugobj, inventorySlots[slotNumber].transform);
                 InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
-                inventoryItem.InitialiseItem(StringToItem(data[1]), count);
+                inventoryItem.InitialiseItem(SaveHelper.StringToItem(data[1]), count);
             }
         }
         
     }
 
     public override string Save(int id) {
-        string items = SaveItems();
+        string items = SaveHelper.SaveItems(ref inventorySlots);
         string pos = origin.ToString();
         string data = getObjectType().ToString() + "_" + placedObjectTypeSO.building.ToString() + "_" + pos + "_" + dir.ToString() + "_" + items;
         return data;
-    }
-
-    /// <summary>
-    /// cycles through all the slots and converts the Items to Strings
-    /// </summary>
-    /// <returns></returns>
-    protected string SaveItems() {
-        string data = "";
-        for (int i = 0; i < inventorySlots.Length; i++) {
-            InventoryItem toSave = inventorySlots[i].GetComponentInChildren<InventoryItem>(includeInactive: true);
-            if (toSave != null) {
-                data += i.ToString() + ":";
-                data += toSave.item.type.ToString()+ ":";
-                data += toSave.count + "*";
-            }
-        }
-        return data;
-    }
-
-    protected Item StringToItem(string item) {
-        switch (item) {
-                case "Test": return Resources.Load("Inventory/So/Test") as Item;
-                case "IronOre": return Resources.Load("Inventory/So/Iron Ore") as Item;
-                case "IronIngot": return Resources.Load("Inventory/So/Iron Ingot") as Item;
-                default: return Resources.Load("Inventory/So/Test") as Item;
-        }
     }
 
     #region Items & Inventorys

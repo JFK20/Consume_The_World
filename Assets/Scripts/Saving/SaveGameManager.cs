@@ -61,7 +61,8 @@ public class SaveGameManager : MonoBehaviour {
                         GridBuildingSystem.Instance.grid.GetGridObject(pos.x, pos.y).ClearPlacedObject(); 
                     }
                 }
-                Destroy(obj.gameObject);
+                //Destroy(obj.gameObject);
+                obj.DestroySaveable();
             }
         }
         
@@ -87,6 +88,7 @@ public class SaveGameManager : MonoBehaviour {
             string[] value = row[i].Split("_");
             
             switch (value[0]) {
+                case "PlayerInventory": LoadPlayerInventory(value[1]); break;
                 case "PlaceableObject": LoadPlaceableObject(value); break;
                 case "Ground": groundStructs[index] = LoadGroundObject(value);
                     index++; break;
@@ -191,5 +193,10 @@ public class SaveGameManager : MonoBehaviour {
             case "Grass": return GroundType.Grass;
             default: return GroundType.Standard;
         }
+    }
+
+    private void LoadPlayerInventory(String items)
+    {
+        InventoryManager.Instance.Load(items);
     }
 }

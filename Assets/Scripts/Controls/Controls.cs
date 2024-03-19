@@ -22,6 +22,8 @@ public class Controls : MonoBehaviour {
 
     public void Awake() {
         Instance = this;
+        inPlayerInventory = false;
+        inBuildMode = false;
     }
 
     // Update is called once per frame

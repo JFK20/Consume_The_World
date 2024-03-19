@@ -63,12 +63,13 @@ public abstract class PlacedObject : SaveableObject {
                 //Debug.Log(item);
                 string[] data = item.Split(":");
                 //Debug.Log(data[0] + "," + data[1] + "," + data[2]);
+                int  id = int.Parse(data[1]);
                 int count = int.Parse(data[2]);
                 int slotNumber = int.Parse(data[0]);
                 GameObject Debugobj = InventoryManager.Instance.inventoryItemPrefab;
                 GameObject newItemGo = Instantiate(Debugobj, inventorySlots[slotNumber].transform);
                 InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
-                inventoryItem.InitialiseItem(SaveHelper.StringToItem(data[1]), count);
+                inventoryItem.InitialiseItem(SaveHelper.IntToItem(id), count);
             }
         }
         

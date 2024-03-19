@@ -14,6 +14,15 @@ public static class SaveHelper
         }
     }
     
+    public static Item IntToItem(int id) {
+        switch (id) {
+            case 0: return Resources.Load("Inventory/So/Test") as Item;
+            case 1: return Resources.Load("Inventory/So/Iron Ore") as Item;
+            case 2: return Resources.Load("Inventory/So/Iron Ingot") as Item;
+            default: return Resources.Load("Inventory/So/Test") as Item;
+        }
+    }
+    
     /// <summary>
     /// cycles through all the slots and converts the Items to Strings
     /// </summary>
@@ -24,7 +33,7 @@ public static class SaveHelper
             InventoryItem toSave = slots[i].GetComponentInChildren<InventoryItem>(includeInactive: true);
             if (toSave != null) {
                 data += i.ToString() + ":";
-                data += toSave.item.type.ToString()+ ":";
+                data += toSave.item.getId.ToString()+ ":";
                 data += toSave.count + "*";
             }
         }

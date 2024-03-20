@@ -8,7 +8,7 @@ public class DemoScript : MonoBehaviour {
     public Item[] itemsToPickup;
 
     public void PickupItem(int id) {
-        bool result = inventoryManager.AddItem(ItemList.Instance.itemList[1], InventorySlot.IO.PrimaryInput);
+        bool result = inventoryManager.AddItem(id, InventorySlot.IO.PrimaryInput);
     }
 
     public void Update() {

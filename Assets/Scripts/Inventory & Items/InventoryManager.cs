@@ -47,17 +47,17 @@ public class InventoryManager : SaveableObject {
     }
 
 
-    public bool AddItem(Item item, InventorySlot.IO io) {
+    public bool AddItem(int id, InventorySlot.IO io) {
         if (currentInventory == null) {
             return false;
         }
         //finds an slot with same item
-        if (item.stackable) {
+        if (ItemList.Instance.itemList[id].stackable) {
             for (int i = 0; i < inventorySlots.Length; i++) {
                 InventorySlot slot = inventorySlots[i];
                 if (slot.io == io) {
                     InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
-                    if (itemInSlot != null && itemInSlot.item.getId == item.getId && itemInSlot.count < maxStackedItem) {
+                    if (itemInSlot != null && itemInSlot.item.getId == id && itemInSlot.count < maxStackedItem) {
                         itemInSlot.count++;
                         itemInSlot.RefreshCount();
                         return true;
@@ -73,18 +73,12 @@ public class InventoryManager : SaveableObject {
             if (slot.io == io) { 
                 InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
                 if (itemInSlot == null) {
-                    SpawnNewItem(item, slot);
+                    ItemHelper.Instance.SpawnNewItem(id, ref slot);
                     return true;
                 }
             }
         }
         return false;
-    }
-
-    public void SpawnNewItem(Item item, InventorySlot slot) {
-        GameObject newItemGo = Instantiate(inventoryItemPrefab, slot.transform);
-        InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
-        inventoryItem.InitialiseItem(item);
     }
 
     public void OpenPlayerInventory() {

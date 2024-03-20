@@ -111,18 +111,12 @@ public abstract class PlacedObject : SaveableObject {
             if (slot.io == io) { 
                 InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
                 if (itemInSlot == null) {
-                    SpawnNewItem(id, slot);
+                    ItemHelper.Instance.SpawnNewItem(id, ref slot);
                     return true;
                 }
             }
         }
         return false;
-    }
-    
-    private void SpawnNewItem(int id, InventorySlot slot) {
-        GameObject newItemGo = Instantiate(InventoryManager.Instance.inventoryItemPrefab, slot.transform);
-        InventoryItem inventoryItem = newItemGo.GetComponent<InventoryItem>();
-        inventoryItem.InitialiseItem(ItemList.Instance.itemList[id]);
     }
 
     protected virtual IEnumerator ProcessItem(Item inputItem, InventorySlot.IO inputIO, int outputItem, InventorySlot.IO outputIO,int time) {

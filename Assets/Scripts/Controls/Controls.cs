@@ -72,6 +72,10 @@ public class Controls : MonoBehaviour {
             if(gridBuildingSystem.GetInventory()) {
                 inInventory = !inInventory;
             }
+            else
+            {
+                inInventory = false;
+            }
         }
         if (Input.GetKeyDown(openPlayerInventory)) {
             InventoryManager.Instance.OpenPlayerInventory();

@@ -28,6 +28,7 @@ public class Item : ScriptableObject {
 public enum ItemType {
     IronOre,
     Tool,
-    Weapon,
-    Test,
+    IronIngot,
+    Test
+    
 }

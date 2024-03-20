@@ -32,7 +32,10 @@ public class InventorySlot : MonoBehaviour, IDropHandler {
     {
         if (transform.childCount == 0) {
             InventoryItem inventoryItem = eventData.pointerDrag.GetComponent<InventoryItem>();
-            inventoryItem.parentAfterDrag = transform;
+            if (inventoryItem)
+            {
+                inventoryItem.parentAfterDrag = transform;
+            }
         }
     }
 }

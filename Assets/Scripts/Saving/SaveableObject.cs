@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum ObjectType {
-    Lincoln,
-    WhiteHouse,
+    PlaceableObject,
+    Ground,
+    InventoryManager,
 }
 
 public abstract class SaveableObject : MonoBehaviour {
@@ -33,6 +34,11 @@ public abstract class SaveableObject : MonoBehaviour {
     }
 
     public void DestroySaveable() {
-        SaveGameManager.Instance.SaveableObjectList.Remove(this);
+        if (objectType == ObjectType.InventoryManager)
+        {
+            return;
+        }
+        //SaveGameManager.Instance.SaveableObjectList.Remove(this);
+        Destroy(this.gameObject);
     }
 }

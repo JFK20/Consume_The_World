@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using CodeMonkey.Utils;
 
@@ -14,11 +15,7 @@ public class GridBuildingSystem : MonoBehaviour {
     [SerializeField] private List<PlacedObjectTypeSO> placedObjectTypeSoList;
     public List<PlacedObjectTypeSO> GetPlacedObjectSoList => placedObjectTypeSoList;
 
-    private PlacedObjectTypeSO placedObjectTypeSo;
-    public PlacedObjectTypeSO PlacedObjectTypeSo {
-        get => placedObjectTypeSo;
-        set => placedObjectTypeSo = value;
-    }
+    public PlacedObjectTypeSO placedObjectTypeSo { get; set; }
 
 
     public GridXZ<GridObject> grid { get; private set; }
@@ -27,25 +24,71 @@ public class GridBuildingSystem : MonoBehaviour {
         get => dir;
         set => dir = value;
     }
-    
 
     private bool InventoryOpen;
+
+    public GroundStruct[] GroundObjects;
     
-    public void GetInventory() {
-        InventoryManager.Instance.OpenInventory(grid.GetGridObject(Mouse3D.GetMouseWorldPosition()));
+    public bool GetInventory()
+    {
+        GridObject go = grid.GetGridObject(Mouse3D.GetMouseWorldPosition());
+        if (go.GetPlacedObject() == null) {
+            InventoryManager.Instance.OpenInventory(go);
+            return false;
+        }
+        InventoryManager.Instance.OpenInventory(go);
+        return true;
     }
 
     private void Awake() {
         Instance = this;
         
-        int gridwidth = 100;
-        int gridheight = 100;
+        int gridwidth = 11;
+        int gridheight = 11;
 
         int cellSize = 10;
         grid = new GridXZ<GridObject>(gridwidth, gridheight, cellSize, Vector3.zero,
             (GridXZ<GridObject> g, int x, int z) => new GridObject(g, x, z));
 
         placedObjectTypeSo = placedObjectTypeSoList[0];
+        GenerateFloor(FloorPreset());
+    }
+
+    private GroundStruct[] FloorPreset() {
+        GroundStruct[] groundLocations = new GroundStruct[grid.GetWidth() * grid.GetHeight()];
+        int index = 0;
+        for (int i = 0; i < grid.GetWidth(); i++) {
+            for (int j = 0; j < grid.GetHeight(); j++) {
+                groundLocations[index] = new GroundStruct(GroundType.Grass,i, j);
+                index++;
+            }
+        }
+        
+        //groundLocations[65].GroundType = GroundType.Ore;
+        groundLocations[60].GroundType = GroundType.TestOre; //Middle
+        return groundLocations;
+    }
+    
+    public void GenerateFloor(GroundStruct[] groundLocations) {
+        GroundObjects = groundLocations;
+        
+        for (int i = 0; i < groundLocations.Length; i++) {
+            GridObject gridObject = grid.GetGridObject(new Vector3(groundLocations[i].x * grid.GetCellSize(), 0, groundLocations[i].y * grid.GetCellSize()));
+                GameObject floorObj = null;
+                
+                switch (groundLocations[i].GroundType) {
+                    case GroundType.TestOre:
+                        floorObj = Resources.Load("Building/Floor/Ore") as GameObject;
+                        break;
+                    default:
+                        floorObj = Resources.Load("Building/Floor/Grass") as GameObject;
+                        break;
+                }
+                
+                gridObject.GroundType = groundLocations[i].GroundType;
+                gridObject.Ground = GroundObject.Create(floorObj, new Vector3Int(groundLocations[i].x, 0, groundLocations[i].y), Quaternion.identity,
+                    this.gameObject.transform, groundLocations[i].GroundType);
+        }
     }
     
     /// <summary>
@@ -61,7 +104,9 @@ public class GridBuildingSystem : MonoBehaviour {
         List<Vector2Int> gridPositionList = placedObjectTypeSo.GetGridPositionList(new Vector2Int(x ,z), dir);
 
         bool freeSlot = true;
+        bool acceptedGround = true;
         GridObject onPositionObject = null;
+        GroundType[] grounds = placedObjectTypeSo.suitableGrounds;
         foreach (Vector2Int gridposition in gridPositionList) {
             onPositionObject = grid.GetGridObject(gridposition.x,gridposition.y);
             if (onPositionObject == null) {
@@ -72,25 +117,40 @@ public class GridBuildingSystem : MonoBehaviour {
                 freeSlot = false;
                 break;
             }
+
+            if (!grounds.Contains(onPositionObject.GroundType)) {
+                acceptedGround = false;
+                break;
+            }
+            // Check if Ground is Suitable
+
         }
 
         //GridObject gridObject = grid.GetGridObject(x, z);
-        if (freeSlot) {
+        if (freeSlot && acceptedGround) {
             Vector2Int rotationOffset = placedObjectTypeSo.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
 
-            //Debug.Log("pos x:" + x + " pos z:" + z);
-            PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo);
+            PlacedObject type = placedObjectTypeSo.prefab.GetComponent<PlacedObject>();
+            PlacedObject placedObject = null;
             
+            switch (type) {
+                case OreMiner:
+                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, placedObjectTypeSo, GroundType.TestOre); break;
+                default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  placedObjectTypeSo); break;
+            }
+
             foreach (Vector2Int gridposition in gridPositionList) {
                 grid.GetGridObject(gridposition.x, gridposition.y).SetPlacedObject(placedObject);
             }
             OnObjectPlaced?.Invoke(this, EventArgs.Empty);
         }
-        else {
+        else if (!freeSlot) {
             Debug.Log("Already Occupied");
-            
+        }
+        else if(!acceptedGround) {
+            Debug.Log("Wrong Ground");
         }
     }
 
@@ -129,8 +189,17 @@ public class GridBuildingSystem : MonoBehaviour {
             Vector2Int rotationOffset = givenPlacedObjectTypeSo.GetRotationOffset(dir);
             Vector3 placedObjectWorldPosition =
                 grid.GetWorldPosition(x, z) + new Vector3(rotationOffset.x, 0, rotationOffset.y) * grid.GetCellSize();
-
-            PlacedObject placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  givenPlacedObjectTypeSo);
+            
+            //PlacedObject type = givenPlacedObjectTypeSo.prefab.GetComponent<PlacedObject>();
+            PlacedObject placedObject = null;
+            
+            switch (givenPlacedObjectTypeSo.nameString) {
+                case "Lincoln":
+                    placedObject = OreMiner.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, givenPlacedObjectTypeSo, GroundType.TestOre); break;
+                case "WhiteHouse":
+                    placedObject = Smelter.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir, givenPlacedObjectTypeSo); break;
+                default: placedObject = PlacedObject.Create(placedObjectWorldPosition, new Vector2Int(x, z), dir,  givenPlacedObjectTypeSo); break;
+            }
             
             foreach (Vector2Int gridposition in gridPositionList) {
                 grid.GetGridObject(gridposition.x, gridposition.y).SetPlacedObject(placedObject);
@@ -217,6 +286,20 @@ public class GridBuildingSystem : MonoBehaviour {
 
         private PlacedObject placedObject;
 
+        private GameObject ground;
+
+        public GameObject Ground {
+            get => ground;
+            set => ground = value;
+        }
+        
+        private GroundType groundType;
+        
+        public GroundType GroundType {
+            get => groundType;
+            set => groundType = value;
+        }
+        
         public GridObject(GridXZ<GridObject> grid, int x, int z) {
             this.grid = grid;
             this.x = x;
@@ -245,4 +328,5 @@ public class GridBuildingSystem : MonoBehaviour {
             return x + "," + z + "\n" + placedObject;
         }
     }
+    
 }

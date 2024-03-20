@@ -12,6 +12,7 @@
   - saving/loading
 
 ## currently working on
+  - bugfix where the ground isnt destroyed with the buidling
   - saving as JSON
 
 ## future plans

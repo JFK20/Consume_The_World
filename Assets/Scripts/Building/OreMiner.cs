@@ -25,7 +25,7 @@ public class OreMiner : PlacedObject {
 
     IEnumerator MineOre(int time) {
         Item item = itemsToMine[0];
-        bool suc = AddItem(1, InventorySlot.IO.PrimaryOutput);
+        bool suc = ItemHelper.Instance.AddItem(1, InventorySlot.IO.PrimaryOutput, ref inventorySlots);
         yield return new WaitForSeconds(time);
         mining = false;
         yield return suc;

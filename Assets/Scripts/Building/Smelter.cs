@@ -32,7 +32,7 @@ public class Smelter : PlacedObject
          if (FreeSlot(ItemList.Instance.itemList[outputItem], outputIO)) {
              yield return new WaitForSeconds(time);
              RemoveItem(inputItem, inputIO);
-             AddItem(outputItem, outputIO);
+             ItemHelper.Instance.AddItem(outputItem, outputIO, ref inventorySlots);
              smelting = false;
              yield return true;
          }

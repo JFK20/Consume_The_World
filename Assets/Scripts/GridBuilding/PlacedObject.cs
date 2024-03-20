@@ -83,41 +83,6 @@ public abstract class PlacedObject : SaveableObject {
     }
 
     #region Items & Inventorys
-    
-    protected bool AddItem(int id ,InventorySlot.IO io) {
-        if (inventorySlots.Length <= 0) {
-            Debug.Log("no Slots");
-            return false;
-        }
-
-        //finds an slot with same item
-        if (ItemList.Instance.itemList[id].stackable) {
-            for (int i = 0; i < inventorySlots.Length; i++) {
-                InventorySlot slot = inventorySlots[i];
-                if (slot.io == io) {
-                    InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
-                    if (itemInSlot != null && itemInSlot.item.getId == id &&
-                        itemInSlot.count < InventoryManager.Instance.maxStackedItem) {
-                        itemInSlot.count++;
-                        itemInSlot.RefreshCount();
-                        return true;
-                    }
-                }
-            }
-        }
-        //finds an empty slot
-        for (int i = 0; i < inventorySlots.Length; i++) {
-            InventorySlot slot = inventorySlots[i];
-            if (slot.io == io) { 
-                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
-                if (itemInSlot == null) {
-                    ItemHelper.Instance.SpawnNewItem(id, ref slot);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     protected virtual IEnumerator ProcessItem(Item inputItem, InventorySlot.IO inputIO, int outputItem, InventorySlot.IO outputIO,int time) {
         return null;

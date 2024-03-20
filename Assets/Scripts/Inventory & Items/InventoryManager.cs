@@ -46,39 +46,9 @@ public class InventoryManager : SaveableObject {
         }
     }
 
-
-    public bool AddItem(int id, InventorySlot.IO io) {
-        if (currentInventory == null) {
-            return false;
-        }
-        //finds an slot with same item
-        if (ItemList.Instance.itemList[id].stackable) {
-            for (int i = 0; i < inventorySlots.Length; i++) {
-                InventorySlot slot = inventorySlots[i];
-                if (slot.io == io) {
-                    InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
-                    if (itemInSlot != null && itemInSlot.item.getId == id && itemInSlot.count < maxStackedItem) {
-                        itemInSlot.count++;
-                        itemInSlot.RefreshCount();
-                        return true;
-                    }
-                }
-                
-            }
-        }
-
-        //finds an empty slot
-        for (int i = 0; i < inventorySlots.Length; i++) {
-            InventorySlot slot = inventorySlots[i];
-            if (slot.io == io) { 
-                InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>();
-                if (itemInSlot == null) {
-                    ItemHelper.Instance.SpawnNewItem(id, ref slot);
-                    return true;
-                }
-            }
-        }
-        return false;
+    public bool AddItem(int id, InventorySlot.IO io)
+    {
+        return ItemHelper.Instance.AddItem(id, io, ref inventorySlots);
     }
 
     public void OpenPlayerInventory() {

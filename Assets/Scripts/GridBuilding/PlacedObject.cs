@@ -84,7 +84,7 @@ public abstract class PlacedObject : SaveableObject {
 
     #region Items & Inventorys
 
-    protected virtual IEnumerator ProcessItem(Item inputItem, InventorySlot.IO inputIO, int outputItem, InventorySlot.IO outputIO,int time) {
+    protected virtual IEnumerator ProcessItem(int inputItemId, InventorySlot.IO inputIO, int outputItemId, InventorySlot.IO outputIO, float time) {
         return null;
     }
 
@@ -114,7 +114,7 @@ public abstract class PlacedObject : SaveableObject {
         return false;
     }
 
-    protected bool FreeSlot(Item item, InventorySlot.IO io) {
+    protected bool FreeSlot(int itemId, InventorySlot.IO io) {
         if (inventorySlots.Length <= 0) {
             Debug.Log("no Slots");
             return false;
@@ -124,7 +124,7 @@ public abstract class PlacedObject : SaveableObject {
             InventorySlot slot = inventorySlots[i];
             if (slot.io == io) {
                 InventoryItem itemInSlot = slot.GetComponentInChildren<InventoryItem>(includeInactive: true);
-                if (itemInSlot == null || (itemInSlot.item.getId == item.getId &&
+                if (itemInSlot == null || (itemInSlot.item.getId == itemId &&
                                            itemInSlot.count < InventoryManager.Instance.maxStackedItem)) {
                     return true;
                 }
@@ -132,10 +132,10 @@ public abstract class PlacedObject : SaveableObject {
         }
         return false;
     }
-    protected bool FreeSlot(int itemId, InventorySlot.IO io) {
+    /*protected bool FreeSlot(int itemId, InventorySlot.IO io) {
         Item item = ItemList.Instance.itemList[itemId];
         return FreeSlot(item, io);
-    }
+    }*/
 
     protected Item FindItem(Item item, InventorySlot.IO io) {
         for (int i = 0; i < inventorySlots.Length; i++) {

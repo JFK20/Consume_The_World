@@ -49,6 +49,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectType: 0
   inventory: {fileID: 5103071612090732410}
+  inputItems:
+  - item: {fileID: 11400000, guid: 792d6306be78c5242a3a1d57de4041cc, type: 2}
+    io: 0
+  outputItems:
+  - item: {fileID: 11400000, guid: 6bde290018d899e4aa021c7c95bb2f78, type: 2}
+    io: 2
+  timeToProcess: 3
 --- !u!1 &5846942720078128171
 GameObject:
   m_ObjectHideFlags: 0

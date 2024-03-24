@@ -24,6 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1518018880191298356}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -33,7 +34,6 @@ Transform:
   - {fileID: 5315510674374102330}
   - {fileID: 8890094225485145823}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-8255444506742398592
 MonoBehaviour:
@@ -49,8 +49,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectType: 0
   inventory: {fileID: 8890094225485145822}
-  itemsToMine:
-  - {fileID: 11400000, guid: 792d6306be78c5242a3a1d57de4041cc, type: 2}
+  inputItems: []
+  outputItems:
+  - item: {fileID: 11400000, guid: 792d6306be78c5242a3a1d57de4041cc, type: 2}
+    io: 2
+  timeToProcess: 3
 --- !u!1 &4544625167459370828
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,13 +80,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4544625167459370828}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 5, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 782702443877573796}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1799572140482749479
 MeshFilter:

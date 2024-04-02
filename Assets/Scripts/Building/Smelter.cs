@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Smelter : PlacedObject
+public class Smelter : ProcessingBuilding
 {
     private bool smelting = false;
     
@@ -15,24 +15,24 @@ public class Smelter : PlacedObject
     
     public void Update() {
         if (!smelting) {
-            Item item = FindItem(1, InventorySlot.IO.PrimaryInput);
+            Item item = FindItem(InputItems[0].Item1, InputItems[0].Item2);
             if (item != null) {
-                StartCoroutine(ProcessItem(item,InventorySlot.IO.PrimaryInput,2,InventorySlot.IO.PrimaryOutput,3));
+                StartCoroutine(ProcessItem(InputItems[0].Item1,InputItems[0].Item2,OutputItems[0].Item1,OutputItems[0].Item2, timeToProcess));
                 smelting = true;
             }
             else {
-                StartCoroutine(Wait(3));
+                StartCoroutine(Wait(timeToProcess));
             }
             
         }
         
     }
 
-    protected override IEnumerator ProcessItem(Item inputItem, InventorySlot.IO inputIO, int outputItem, InventorySlot.IO outputIO,int time) {
-         if (FreeSlot(ItemList.Instance.itemList[outputItem], outputIO)) {
+    protected override IEnumerator ProcessItem(int inputItemId, InventorySlot.IO inputIO, int outputItemId, InventorySlot.IO outputIO,float time) {
+         if (FreeSlot(outputItemId, outputIO)) {
              yield return new WaitForSeconds(time);
-             RemoveItem(inputItem, inputIO);
-             ItemHelper.Instance.AddItem(outputItem, outputIO, ref inventorySlots);
+             RemoveItem(ItemList.Instance.itemList[inputItemId], inputIO);
+             ItemHelper.Instance.AddItem(outputItemId, outputIO, ref inventorySlots);
              smelting = false;
              yield return true;
          }
@@ -42,7 +42,7 @@ public class Smelter : PlacedObject
          yield break;
     }
 
-    IEnumerator Wait(int time) {
+    IEnumerator Wait(float time) {
         yield return new WaitForSeconds(time);
         yield break;
     }
